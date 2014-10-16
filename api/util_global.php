@@ -83,6 +83,14 @@ function jsonstrval($val)
   return is_null($val) ? "null" : strval($val);
 }
 
+function jsonnewline($str)
+{
+  if (!is_null($str)){
+    $str = str_replace("\n", "\\n", $str);
+  }
+  return $str;
+}
+
 function sqlstr($str)
 {
   return (is_null($str) || empty($str)) ? "null" : "'".str_replace("'", "\\'", $str)."'";

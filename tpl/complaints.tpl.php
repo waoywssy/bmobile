@@ -5,7 +5,6 @@
 .table {
   table-layout:fixed;
 }
-
 .table td {
   white-space: nowrap;
   overflow: hidden;
@@ -16,7 +15,6 @@
 <?php
 global $base_url;
 $module_path = drupal_get_path('module','mboryi');
-//drupal_add_css($module_path . '/css/list.css');
 drupal_add_js($module_path . '/js/complaints.js');
 ?>
 
@@ -34,12 +32,12 @@ drupal_add_js($module_path . '/js/complaints.js');
 
 <table class="table table-bordered table-striped table-responsive">
 <thead>
-<tr><th>职位名</th><!--th>举报类型</th><th>举报时间</th--><th>处理</th></tr>
+<tr><th>职位名</th><th>处理</th></tr>
 </thead>
 <tbody>
-<tr><td>软件测试员</td><!--td>213</td><td>231</td--><td><button type="button" class="btn btn-default" data-toggle="modal" data-target="#myModal">处理</button></td></tr>
-<tr><td>厨师</td><!--td>213</td><td>231</td--><td><button type="button" class="btn btn-default" data-toggle="modal" data-target="#myModal">处理</button></td></tr>
-<tr><td>挖掘机司机培训，美容美发</td><!--td>213</td><td>231</td--><td><button type="button" class="btn btn-default" data-toggle="modal" data-target="#myModal">处理</button></td></tr>
+<tr><td>软件测试员</td><td><button type="button" class="btn btn-default" data-toggle="modal" data-target="#myModal">处理</button></td></tr>
+<tr><td>厨师</td><td><button type="button" class="btn btn-default" data-toggle="modal" data-target="#myModal">处理</button></td></tr>
+<tr><td>挖掘机司机培训，美容美发</td><td><button type="button" class="btn btn-default" data-toggle="modal" data-target="#myModal">处理</button></td></tr>
 </tbody>
 </table>
 
@@ -74,22 +72,6 @@ drupal_add_js($module_path . '/js/complaints.js');
         </tbody>
         </table>
         <form role="form">
-          <!--div class="form-group">
-            <label for="id">举报编码</label>
-            <div id="id">123</div>
-          </div>
-          <div class="form-group">
-            <label for="type">举报类型</label>
-            <div id="type">123</div>
-          </div>
-          <div class="form-group">
-            <label for="content">举报内容</label>
-            <div id="content">123举报内容123举报内容123举报内容123举报内容123举报内容123举报内容123举报内容123举报内容123举报内容123举报内容123举报内容123举报内容123举报内容123举报内容123举报内容123举报内容123举报内容123举报内容123举报内容123举报内容123举报内容123举报内容123举报内容123举报内容123举报内容123举报内容123举报内容123举报内容</div>
-          </div>
-          <div class="form-group">
-            <label for="datetime">举报时间</label>
-            <div id="datetime">2014-09-20</div>
-          </div-->
           <div class="form-group">
             <label for="result">处理结果</label>
             <div id="result" class="btn-group btn-group-justified">
