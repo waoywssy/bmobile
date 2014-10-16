@@ -1,0 +1,106 @@
+<?php
+/**
+ * Implements hook_install()
+ */
+function mboryi_install(){
+	/*
+	// create any roles we will be using
+	$auditor_permissions = array(
+		'auditor permission',
+	);
+	$accountant_permissions = array(
+		'accountant permission',
+		'access user profiles',
+	);
+	$manager_permissions = array(
+		'manager permission',
+		'access user profiles',
+		'access content overview',
+		'administer nodes',
+		'bypass node access',
+	);
+	
+	add_role('auditor', 10);
+	add_role('accountant', 20);
+	add_role('manager', 30);
+
+	add_permissions('auditor', $auditor_permissions);
+	add_permissions('accountant', $accountant_permissions);
+	add_permissions('manager', $manager_permissions); 
+	*/
+	//variable_set('mboryi_service_tel_number', '400-9999-8888');
+}
+
+/**
+ *	Adds a new role
+ *      @machine_name - the name of the role to be added
+ *      @weight - the optional display weight for role
+ */
+function add_role($machine_name, $weight = 0){ 
+	$role         = new stdClass(); 
+	$role->name   = $machine_name; 
+	$role->weight = $weight; 
+	
+	if (!user_role_load_by_name($role->name)){ 
+    	user_role_save($role); 
+  	}
+}
+
+/**
+ *	Adds permissions to a role
+ *	@role_name - the name of the role to receive an update
+ *	@permissions - the array of permissions to add
+ */
+function add_permissions($role_name, $permissions){
+	$role = user_role_load_by_name($role_name);
+
+	// to make sure this method works, we have to implement the 
+	// hook_permissions() in the module
+	user_role_grant_permissions($role->rid, $permissions);
+}
+
+
+function mboryi_enable() {
+	$t = get_t();
+	// Create a custom menu, if Menu module is enabled.
+	// @see mboryi_modules_installed()
+	if (module_exists('menu')) {
+		/*
+		menu_save(array(
+			'menu_name'   => 'mboryi_exchange', 
+			'title'       => $t('好易贷友情链接'),
+			'description' => $t('好易贷的友情链接'), 
+			'module'      => 'mboryi',
+		));
+		menu_link_save($menu_item);
+		*/
+	}
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function mboryi_uninstall() {
+/*
+	// remove any roles we created 
+	user_role_delete('auditor');
+	user_role_delete('accountant');
+	user_role_delete('manager');
+*/
+	// Delete the mboryi menu.
+	if (module_exists('menu')) { 
+		/*
+		if ($menu = menu_load('mboryi_exchange')) { 
+			menu_delete($menu); 
+		}*/
+	}
+}
+
+function mboryi_disable(){
+	// Delete all links of the mboryi menu.
+	if (module_exists('menu')) { 
+		/*
+		menu_delete_links('mboryi_exchange');  // this one should be deleted manually
+		*/
+	}
+}

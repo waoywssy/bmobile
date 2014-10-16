@@ -1,0 +1,162 @@
+<?php
+
+/** 
+ * Implements hook_permission().
+ */ 
+function mboryi_permission() {
+  return array();
+  /*
+  return array(
+    'auditor permission' => array(
+      'title'       => t('注册用户借款审核员权限'),
+      'description' => t('注册用户借款审核员：网站初级管理员，负责审核网站新注册用户资料、抵押借款申请资料、浏览用户资料、获取应付款账户（投资用户）及金额列表，获取应还款账户（借款用户）及金额列表，浏览抵押借款欠款用户及金额列表'),
+    ),
+  );
+  */
+}
+
+/**
+* Implementation of hook_menu().
+*/
+function mboryi_menu() {
+  // api function calls 
+  $items['hire_complaints'] = array(
+    'title'           => t("包工举报"),
+    'page callback'   => 'hire_complaints', 
+    'page arguments'  => array("1"),
+    'access callback' => TRUE,
+    'type'            => MENU_NORMAL_ITEM,
+  );
+  $items['hire_complaints/tocheck'] = array(
+    'title'           => t("未处理"),
+    'access callback' => TRUE,
+    'type'            => MENU_DEFAULT_LOCAL_TASK,
+    'weight'          => 0,
+  );
+  $items['hire_complaints/checking'] = array(
+    'title'           => t("处理中"),
+    'page callback'   => 'hire_complaints', 
+    'page arguments'  => array("2"),
+    'access callback' => TRUE,
+    'type'            => MENU_LOCAL_TASK,
+    'weight'          => 5,
+  );
+  $items['hire_complaints/checked'] = array(
+    'title'           => t("已处理"),
+    'page callback'   => 'hire_complaints', 
+    'page arguments'  => array("3"),
+    'access callback' => TRUE,
+    'type'            => MENU_LOCAL_TASK,
+    'weight'          => 10,
+  );
+  $items['api/get_hire_complaints'] = array(
+    'page callback'   => 'get_hire_complaints', 
+    'access callback' => TRUE,
+    'type'            => MENU_NORMAL_ITEM,
+    'file'            => 'api/get_hire_complaints.php',
+  );
+
+  $items['job_complaints'] = array(
+    'title'           => t("招工举报"),
+    'page callback'   => 'job_complaints', 
+    'page arguments'  => array("1"),
+    'access callback' => TRUE,
+    'type'            => MENU_NORMAL_ITEM, 
+  );
+  $items['job_complaints/tocheck'] = array(
+    'title'           => t("未处理"),
+    'access callback' => TRUE,
+    'type'            => MENU_DEFAULT_LOCAL_TASK,
+    'weight'          => 0,
+  );
+  $items['job_complaints/checking'] = array(
+    'title'           => t("处理中"),
+    'page callback'   => 'job_complaints', 
+    'page arguments'  => array("2"),
+    'access callback' => TRUE,
+    'type'            => MENU_LOCAL_TASK,
+    'weight'          => 5,
+  );
+  $items['job_complaints/checked'] = array(
+    'title'           => t("已处理"),
+    'page callback'   => 'job_complaints', 
+    'page arguments'  => array("3"),
+    'access callback' => TRUE,
+    'type'            => MENU_LOCAL_TASK,
+    'weight'          => 10,
+  );
+  $items['api/get_job_complaints'] = array(
+    'page callback'   => 'get_job_complaints', 
+    'access callback' => TRUE,
+    'type'            => MENU_NORMAL_ITEM,
+    'file'            => 'api/get_job_complaints.php',
+  );
+
+  $items['sub_users'] = array(
+    'title'           => t("订阅用户"),
+    'page callback'   => 'manage_owned_user', 
+    'access callback' => TRUE,
+    'type'            => MENU_NORMAL_ITEM,
+    'weight'          => 10,
+  );
+  $items['online_users'] = array(
+    'title'           => t("在线用户"),
+    'page callback'   => 'manage_owned_user', 
+    'access callback' => TRUE,
+    'type'            => MENU_NORMAL_ITEM,
+    'weight'          => 20,
+  );
+  $items['search_users'] = array(
+    'title'           => t("搜索用户"),
+    'page callback'   => 'manage_owned_user', 
+    'access callback' => TRUE,
+    'type'            => MENU_NORMAL_ITEM,
+    'weight'          => 30,
+  );
+  return $items; 
+} 
+
+function hire_complaints($type){
+  $content = array();
+  $content['type'] = $type;
+  return theme('hire_complaints', $content);
+}
+
+function job_complaints($type){
+  $content = array();
+  $content['type'] = $type;
+  return theme('job_complaints', $content);
+}
+
+
+function mboryi_theme($existing, $type, $theme, $path) {  
+  $p = drupal_get_path('module', 'mboryi') . '/tpl'; 
+
+  return array(
+    'hire_complaints' => array(
+        'path'      => $p,
+        'template'  => 'hire_complaints', 
+        /* 'variables' => array(
+           'haha' => NULL,),
+        */
+      ),
+    'job_complaints' => array(
+        'path'      => $p,
+        'template'  => 'job_complaints', 
+      ),
+    );
+}
+
+
+function manage_owned_user(){
+  return 'hello';
+}
+
+/**
+* Implements hook_user_logout
+*/
+function mboryi_user_logout($account) { 
+  // Destroy the current session, and reset $user to the anonymous user.
+  session_destroy();
+  drupal_goto(); 
+}

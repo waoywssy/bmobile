@@ -1,0 +1,25 @@
+; $Id: bots.info,v 1.0 2010/09/04 05:50:55 dries Exp $
+name = mboryi
+description = An online loaning system
+package = Boryi
+core = 7.x
+files[] = mboryi.module
+files[] = mboryi.install
+
+configure=admin/config/content/mboryi/settings
+
+
+dependencies[] = ckeditor
+;dependencies[] = features
+dependencies[] = jquery_update
+;dependencies[] = views
+
+
+
+
+; Information added by drupal.org packaging script on 2010-11-22
+version = "1.0"
+project = "Boryi"
+datestamp = "1281559292"
+
+
