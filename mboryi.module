@@ -23,7 +23,7 @@ function mboryi_menu() {
   $items['hire_complaints'] = array(
     'title'           => t("包工举报"),
     'page callback'   => 'get_complaints', 
-    'page arguments'  => array("1"),
+    'page arguments'  => array("1", "hire"),
     'access callback' => TRUE,
     'type'            => MENU_NORMAL_ITEM,
   );
@@ -36,7 +36,7 @@ function mboryi_menu() {
   $items['hire_complaints/checking'] = array(
     'title'           => t("处理中"),
     'page callback'   => 'get_complaints', 
-    'page arguments'  => array("2"),
+    'page arguments'  => array("2", "hire"),
     'access callback' => TRUE,
     'type'            => MENU_LOCAL_TASK,
     'weight'          => 5,
@@ -44,7 +44,7 @@ function mboryi_menu() {
   $items['hire_complaints/checked'] = array(
     'title'           => t("已处理"),
     'page callback'   => 'get_complaints', 
-    'page arguments'  => array("3"),
+    'page arguments'  => array("3", "hire"),
     'access callback' => TRUE,
     'type'            => MENU_LOCAL_TASK,
     'weight'          => 10,
@@ -55,11 +55,17 @@ function mboryi_menu() {
     'type'            => MENU_NORMAL_ITEM,
     'file'            => 'api/get_hire_complaints.php',
   );
+  $items['api/audit_hire_complaint'] = array(
+    'page callback'   => 'audit_hire_complaint', 
+    'access callback' => TRUE,
+    'type'            => MENU_NORMAL_ITEM,
+    'file'            => 'api/audit_hire_complaint.php',
+  );
 
   $items['job_complaints'] = array(
     'title'           => t("招工举报"),
     'page callback'   => 'get_complaints', 
-    'page arguments'  => array("1"),
+    'page arguments'  => array("1", "job"),
     'access callback' => TRUE,
     'type'            => MENU_NORMAL_ITEM, 
   );
@@ -72,7 +78,7 @@ function mboryi_menu() {
   $items['job_complaints/checking'] = array(
     'title'           => t("处理中"),
     'page callback'   => 'get_complaints', 
-    'page arguments'  => array("2"),
+    'page arguments'  => array("2", "job"),
     'access callback' => TRUE,
     'type'            => MENU_LOCAL_TASK,
     'weight'          => 5,
@@ -80,7 +86,7 @@ function mboryi_menu() {
   $items['job_complaints/checked'] = array(
     'title'           => t("已处理"),
     'page callback'   => 'get_complaints', 
-    'page arguments'  => array("3"),
+    'page arguments'  => array("3", "job"),
     'access callback' => TRUE,
     'type'            => MENU_LOCAL_TASK,
     'weight'          => 10,
@@ -91,7 +97,12 @@ function mboryi_menu() {
     'type'            => MENU_NORMAL_ITEM,
     'file'            => 'api/get_job_complaints.php',
   );
-
+  $items['api/audit_job_complaint'] = array(
+    'page callback'   => 'audit_job_complaint', 
+    'access callback' => TRUE,
+    'type'            => MENU_NORMAL_ITEM,
+    'file'            => 'api/audit_job_complaint.php',
+  );
   $items['sub_users'] = array(
     'title'           => t("订阅用户"),
     'page callback'   => 'list_users', 
@@ -119,9 +130,10 @@ function mboryi_menu() {
   return $items; 
 } 
 
-function get_complaints($type){
+function get_complaints($type, $complaints_type){
   $content = array();
   $content['type'] = $type;
+  $content['complaints_type'] = $complaints_type;
   return theme('complaints', $content);
 }
 

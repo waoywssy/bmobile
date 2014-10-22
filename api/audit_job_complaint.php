@@ -1,11 +1,11 @@
 <?php
 
-function audit_job_complaint($id, $type, $result)
-//function audit_job_complaint()
+//function audit_job_complaint($id, $type, $result)
+function audit_job_complaint()
 {
   include_once 'util_global.php';
   include_once 'util_data.php';
-/*
+
   if ($user->uid <= 0)
   {
     echo "{\"result\":0,\"error\":".$errors["not authenticated"]."}";
@@ -35,7 +35,7 @@ function audit_job_complaint($id, $type, $result)
     echo "{\"result\":0,\"error\":".$errors["missing params"]."}";
     exit;
   }
-*/
+
   $con=mysqli_connect($db_host, $db_user, $db_pwd, $db_name);
   // Check connection
   if (mysqli_connect_errno())

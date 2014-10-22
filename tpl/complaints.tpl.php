@@ -1,5 +1,6 @@
 <script>
 	var type = <?php echo $type; ?>;
+  var ctype = "<?php echo $complaints_type; ?>";
 </script>
 <style>
 .table {
@@ -10,35 +11,29 @@
   overflow: hidden;
   text-overflow: ellipsis;
 }
+#md-content{
+  width:120%!important;
+}
 </style>
 
 <?php
-global $base_url;
 $module_path = drupal_get_path('module','mboryi');
+drupal_add_js($module_path . '/js/complaint_types.js');
 drupal_add_js($module_path . '/js/complaints.js');
 ?>
-
-<!--
-<div id="hire">
-<?php if ($type == "2"){ ?>
-	处理中
-<?php } else if ($type == "3"){ ?>
-	已处理
-<?php } else { ?>
-	未处理
-<?php } ?>
-</div>
--->
-
-<table class="table table-bordered table-striped table-responsive">
+<table class="table table-bordered table-striped table-responsive" id="jobs">
 <thead>
-<tr><th>职位名</th><th>处理</th></tr>
+<tr>
+<th>
+<?php if ($complaints_type == "job"){ ?>
+  职位名
+<?php } else { ?>
+  工种名
+<?php } ?>
+</th>
+<th>处理</th>
+</tr>
 </thead>
-<tbody>
-<tr><td>软件测试员</td><td><button type="button" class="btn btn-default" data-toggle="modal" data-target="#myModal">处理</button></td></tr>
-<tr><td>厨师</td><td><button type="button" class="btn btn-default" data-toggle="modal" data-target="#myModal">处理</button></td></tr>
-<tr><td>挖掘机司机培训，美容美发</td><td><button type="button" class="btn btn-default" data-toggle="modal" data-target="#myModal">处理</button></td></tr>
-</tbody>
 </table>
 
 <ul class="pagination">
@@ -51,55 +46,62 @@ drupal_add_js($module_path . '/js/complaints.js');
   <li><a href="#">&raquo;</a></li>
 </ul>
 <!-- Modal -->
-<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog">
-    <div class="modal-content">
+    <div class="modal-content" id="md-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
         <h4 class="modal-title" id="myModalLabel">举报处理</h4>
       </div>
       <div class="modal-body">
-        <table class="table table-bordered table-striped table-responsive">
+        <table class="table table-bordered table-striped table-responsive" id="complaints">
         <thead>
           <tr><th>举报编码</th><th>举报类型</th><th>举报内容</th><th>举报时间</th></tr>
         </thead>
-        <tbody>
-          <tr><td>213</td><td>虚假信息</td><td>123举报内容123举报内容123举报内容123举报内容123举报内容123举报内容123举报内容123举报内容123</td><td>2014-09-20</td></tr>
-          <tr><td>213</td><td>骗子</td><td></td><td>2014-09-20</td></tr>
-          <tr><td>213</td><td>重复发布</td><td>234234</td><td>2014-09-20</td></tr>
-          <tr><td>213</td><td>重复发布</td><td><a href="#" class="tooltip-test" title="举报内容123" data-original-title="举报内容123">虚假...</a></td><td>2014-09-20</td></tr>
-          <tr><td>213</td><td>重复发布</td><td>234234</td><td>2014-09-20</td></tr>
-        </tbody>
         </table>
         <form role="form">
           <div class="form-group">
             <label for="result">处理结果</label>
-            <div id="result" class="btn-group btn-group-justified">
-              <div class="radio">
-                <label>
-                  <input type="radio" name="results" id="result1" value="1" checked="">
-                  同意
-                </label>
+            <?php if ($type == 3){ ?>
+              <div id="result">
+              同意
               </div>
-              <div class="radio">
-                <label>
-                  <input type="radio" name="results" id="result2" value="2" checked="">
-                  拒绝
-                </label>
+            <?php } else { ?>
+              <div id="result" class="btn-group btn-group-justified">
+                <div class="radio">
+                  <label>
+                    <input type="radio" name="results" id="result1" value="3" checked="">
+                    同意
+                  </label>
+                </div>
+                <div class="radio">
+                  <label>
+                    <input type="radio" name="results" id="result2" value="2" checked="">
+                    拒绝
+                  </label>
+                </div>
+                <div class="radio">
+                  <label>
+                    <input type="radio" name="results" id="result3" value="1" checked="">
+                    都不是
+                  </label>
+                </div>
               </div>
-              <div class="radio">
-                <label>
-                  <input type="radio" name="results" id="result3" value="3" checked="">
-                  都不是
-                </label>
-              </div>
-            </div>
+            <?php } ?>
           </div>
         </form>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-        <button type="button" class="btn btn-primary">确认</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal">
+        <?php if ($type == 3){ ?>
+        关闭窗口
+        <?php } else { ?>
+        取消
+        <?php } ?>
+        </button>
+        <?php if ($type != 3){ ?>
+        <button type="button" class="btn btn-primary" id="confirm">确认</button>
+        <?php } ?>
       </div>
     </div>
   </div>

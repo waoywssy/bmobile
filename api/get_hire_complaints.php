@@ -52,9 +52,9 @@ function get_hire_complaints()
   {
     $query_1 = "SELECT COUNT(DISTINCT cnh_nh_id) AS total FROM complaint_nearby_hires_cnh WHERE ";
     if ($type > 1){
-      $query_1 .= "cnj_is_done=".sqlstrval($type - 2);  
+      $query_1 .= "cnh_is_done=".sqlstrval($type - 2);  
     } else {
-      $query_1 .= "cnj_is_done IS NULL";  
+      $query_1 .= "cnh_is_done IS NULL";  
     }
 
     $result = mysqli_query($con, $query_1);
@@ -69,9 +69,9 @@ function get_hire_complaints()
   {
     $query_2 = "SELECT DISTINCT cnh_nh_id FROM complaint_nearby_hires_cnh WHERE ";
     if ($type > 1){
-      $query_2 .= "cnj_is_done=".sqlstrval($type - 2);
+      $query_2 .= "cnh_is_done=".sqlstrval($type - 2);
     } else {
-      $query_2 .= "cnj_is_done IS NULL";  
+      $query_2 .= "cnh_is_done IS NULL";  
     }
     $query_2 .= " ORDER BY cnh_time ASC LIMIT ".strval($start).",".strval($per_page);
 
@@ -98,7 +98,7 @@ function get_hire_complaints()
         $nh_address = $row['nh_address'];
         mysqli_free_result($result_3);
 
-        $hire = "\"id\":".jsonstrval($cnh_nh_id).",\"s\":".jsonstr($nh_start).",\"e\":".jsonstr($nh_end).",\"t\":".jsonstr($nh_titles).",\"l\":".jsonstrval($nh_location).",\"c\":".jsonstrval($nh_content).",\"d\":".jsonstrval($nh_duration).",\"cnt\":".jsonstr($nh_contact).",\"phn\":".jsonstr($nh_phone).",\"eml\":".jsonstr($nh_email).",\"add\":".jsonstr($nh_address);
+        $hire = "\"id\":".jsonstrval($cnh_nh_id).",\"s\":".jsonstr($nh_start).",\"e\":".jsonstr($nh_end).",\"t\":".jsonstr($nh_titles).",\"l\":\"".jsonstrval($nh_location)."\",\"c\":\"".jsonnewline(jsonstrval($nh_content))."\",\"d\":".jsonstrval($nh_duration).",\"cnt\":".jsonstr($nh_contact).",\"phn\":".jsonstr($nh_phone).",\"eml\":".jsonstr($nh_email).",\"add\":".jsonstr($nh_address);
 
         $complaints = "";
 
