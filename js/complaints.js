@@ -3,6 +3,7 @@ Drupal.behaviors.account = {
   attach: function(context, settings) {
       var apiBase = Drupal.settings.basePath + "api/";
       var getUrl = "";
+      var per_page = 3;
       var auditUrl = "";
       var btnText = '处理';
       
@@ -15,20 +16,30 @@ Drupal.behaviors.account = {
       }
 
       if (type == 3){
-        btnText = '查看';  
+        btnText = '查看';
       }
+      var btn = $('<button type="button" class="btn btn-default" data-toggle="modal" data-target="#myModal">' + btnText + '</button>');
 
-
-  	  // remove those parent menu's link 
+      var total = 0;
+      var pages = 1;
+      
+      var pagi = $('#pagination');
+      pagi.pagination({
+          items: 0,
+          itemsOnPage: per_page,
+          hrefTextPrefix: '#page=', 
+      });
+  	  
+      // remove those parent menu's link 
       $.getJSON(getUrl, 
         function(d) {
-        	console.log(d);
+          total = d.total > 0 ? d.total : total;
+
+        	// console.log(d);
           var page = [];
           page.j = {};  // jobs
           page.currentid = null;
-          var total = d.total;
-
-          var btn = $('<button type="button" class="btn btn-default" data-toggle="modal" data-target="#myModal">' + btnText + '</button>');
+          pagi.pagination('updateItems', total); 
 
           var jobs = {};
           if (ctype == "job"){
@@ -57,7 +68,6 @@ Drupal.behaviors.account = {
             var job = $(page.j).data(e.relatedTarget.id);
             page.currentid =  job.id;
 
-            console.log(job);
             $("#complaints").find("tr:gt(0)").remove();
             $.each(job.complaints, function(index, value){
               $("#complaints").append(

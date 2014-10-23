@@ -19,6 +19,7 @@
 <?php
 $module_path = drupal_get_path('module','mboryi');
 drupal_add_js($module_path . '/js/complaint_types.js');
+drupal_add_js($module_path . '/js/jquery.simplePagination.js');
 drupal_add_js($module_path . '/js/complaints.js');
 ?>
 <table class="table table-bordered table-striped table-responsive" id="jobs">
@@ -36,18 +37,8 @@ drupal_add_js($module_path . '/js/complaints.js');
 </thead>
 </table>
 
-<ul class="pagination">
-  <li class="disabled"><a href="#">&laquo;</a></li>
-  <li class="active"><a href="#">1</a></li>
-  <li><a href="#">2</a></li>
-  <li><a href="#">3</a></li>
-  <li><a class="disabled">...</a></li>
-  <li><a href="#">99</a></li>
-  <li><a href="#">100</a></li>
-  <li><a href="#">&raquo;</a></li>
-</ul>
+<ul class="pagination" id="pagination"></ul>
 
-<!-- Modal -->
 <div class="modal" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content" id="md-content">
