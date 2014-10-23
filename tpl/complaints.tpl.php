@@ -41,10 +41,12 @@ drupal_add_js($module_path . '/js/complaints.js');
   <li class="active"><a href="#">1</a></li>
   <li><a href="#">2</a></li>
   <li><a href="#">3</a></li>
-  <li><a href="#">4</a></li>
-  <li><a href="#">5</a></li>
+  <li><a class="disabled">...</a></li>
+  <li><a href="#">99</a></li>
+  <li><a href="#">100</a></li>
   <li><a href="#">&raquo;</a></li>
 </ul>
+
 <!-- Modal -->
 <div class="modal" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog">
