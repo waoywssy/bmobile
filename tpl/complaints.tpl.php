@@ -56,9 +56,7 @@ drupal_add_js($module_path . '/js/complaints.js');
           <div class="form-group">
             <label for="result">处理结果</label>
             <?php if ($type == 3){ ?>
-              <div id="result">
-              同意
-              </div>
+              <div id="result" ></div>
             <?php } else { ?>
               <div id="result" class="btn-group btn-group-justified">
                 <div class="radio">
@@ -79,6 +77,14 @@ drupal_add_js($module_path . '/js/complaints.js');
                     都不是
                   </label>
                 </div>
+            <?php if ($type == 1){ ?>
+                <div class="radio">
+                  <label>
+                    <input type="radio" name="results" id="result0" value="0" checked="">
+                    需要调查
+                  </label>
+                </div>
+            <?php } ?>
               </div>
             <?php } ?>
           </div>

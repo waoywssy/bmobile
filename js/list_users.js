@@ -2,7 +2,6 @@
 Drupal.behaviors.account = {
   attach: function(context, settings) {
 
-  	// remove those parent menu's link 
 	$.getJSON(Drupal.settings.basePath + "api/get_job_complaints?t=" + type, 
         function(d) {
         	console.log(d);
