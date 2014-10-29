@@ -127,7 +127,25 @@ function mboryi_menu() {
     'type'            => MENU_NORMAL_ITEM,
     'weight'          => 30,
   );
-  return $items; 
+  $items['api/get_users'] = array(
+    'page callback'   => 'get_users', 
+    'access callback' => TRUE,
+    'type'            => MENU_NORMAL_ITEM,
+    'file'            => 'api/get_users.php',
+  );
+  $items['api/get_online_users'] = array(
+    'page callback'   => 'get_online_users', 
+    'access callback' => TRUE,
+    'type'            => MENU_NORMAL_ITEM,
+    'file'            => 'api/get_online_users.php',
+  );
+  $items['api/set_user_credit'] = array(
+    'page callback'   => 'set_user_credit', 
+    'access callback' => TRUE,
+    'type'            => MENU_NORMAL_ITEM,
+    'file'            => 'api/set_user_credit.php',
+  );
+  return $items;
 } 
 
 function get_complaints($type, $complaints_type){

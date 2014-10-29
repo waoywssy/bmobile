@@ -42,6 +42,22 @@ Drupal.behaviors.account = {
         current_page = pageNum;
         $.getJSON(getUrl + "&p=" + pageNum, 
           function(d) {
+            var jobs;
+            if (ctype == "job"){
+              jobs = d.jobs || {};
+            } else {
+              jobs = d.hires || {};
+            }
+
+            $("#jobs").find("tr:gt(0)").remove();
+            if (jobs.length == 0){
+              $("#jobs").append(
+                $('<tr/>').append(
+                  $('<td />').addClass('info').attr('colspan', '2').attr('align', 'center').append('没有结果'))
+              );
+              return;
+            }
+            
             total = d.total > 0 ? d.total : total;
 
             if (total > per_page){
@@ -51,14 +67,6 @@ Drupal.behaviors.account = {
               pagi.hide();
             }
 
-            var jobs = {};
-            if (ctype == "job"){
-              jobs = d.jobs;
-            } else {
-              jobs = d.hires;
-            }
-
-            $("#jobs").find("tr:gt(0)").remove();
             $.each(jobs, function(index, value){
               var jid = 'jid-' + value.id;
               // check if this job has alreay been cached
@@ -96,37 +104,38 @@ Drupal.behaviors.account = {
                 $('#result').html(complaint_results[r + 2]);
               }
             })
-
-            if (type != 3){
-              // 未处理和处理中
-              $("#confirm").click(function(event) {
-                
-                var parmas = "&i=" + page.currentid + '&t=';
-                var checked = $("input[name='results']:checked").val();
-                if (checked != 0){
-                  // 已处理
-                  parmas += "3&r=" + checked;
-                } else {
-                  // 处理中
-                  parmas += "2&r=1";
-                }
-                
-                $.getJSON(auditUrl + parmas, function(d){
-                  console.log(d);
-                  getPageData(current_page);
-
-                  $('#myModal').modal('hide');  
-                }) 
-                .fail(function( jqxhr, textStatus, error ) {
-                  var err = textStatus + ", " + error;
-                  alert( "加载基本信息出现问题，请重新刷新页面" + err);
-                });
-              });
-            }
           })
         .fail(function( jqxhr, textStatus, error ) {
           var err = textStatus + ", " + error;
           alert( "加载基本信息出现问题，请重新刷新页面" + err);
+        });
+      }
+
+      if (type != 3){
+        // 未处理和处理中
+        $("#confirm").click(function(event) {
+          
+          var parmas = "&i=" + page.currentid + '&t=';
+          var checked = $("input[name='results']:checked").val();
+          if (checked != 0){
+            // 已处理
+            parmas += "3&r=" + checked;
+          } else {
+            // 处理中
+            parmas += "2&r=1";
+          }
+          
+          $.getJSON(auditUrl + parmas, function(d){
+            console.log(d);
+            getPageData(current_page);
+
+            $('#myModal').modal('hide');  
+            page.u = {}; 
+          }) 
+          .fail(function( jqxhr, textStatus, error ) {
+            var err = textStatus + ", " + error;
+            alert( "加载基本信息出现问题，请重新刷新页面" + err);
+          });
         });
       }
 

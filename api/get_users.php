@@ -83,7 +83,11 @@ function get_users()
 
     if ($page > 1 || $total > 0)
     {
-      $query_2 = "SELECT u_openid, u_nickname, u_sex, u_city, u_province, u_country, u_headimgurl, u_subscribe_time, u_unionid FROM users_u WHERE u_subscribe=1 ORDER BY u_subscribe_time ".$order." LIMIT ".strval($start).",".strval($per_page);
+      $query_2 = "SELECT u_openid, u_nickname, u_sex, u_city, u_province, u_country, u_headimgurl, u_subscribe_time, u_unionid, ucr_credit 
+      FROM users_u 
+      LEFT OUTER JOIN user_credits_ucr ON u_openid = ucr_openid 
+      WHERE u_subscribe=1 
+      ORDER BY u_subscribe_time ".$order." LIMIT ".strval($start).",".strval($per_page);
 
       $result = mysqli_query($con, $query_2);
       while ($row = mysqli_fetch_array($result))
@@ -97,8 +101,9 @@ function get_users()
         $u_headimgurl = $row['u_headimgurl'];
         $u_subscribe_time = $row['u_subscribe_time'];
         $u_unionid = $row['u_unionid'];
+        $ucr_credit = $row['ucr_credit'];
 
-        $users = $users.",{\"oi\":".jsonstr($u_openid).",\"nn\":".jsonstr($u_nickname).",\"sx\":".jsonstrval($u_sex).",\"ct\":".jsonstr($u_city).",\"pr\":".jsonstr($u_province).",\"cn\":".jsonstr($u_country).",\"hd\":".jsonstr($u_headimgurl).",\"st\":".jsonstr($u_subscribe_time).",\"ui\":".jsonstr($u_unionid)."}";
+        $users = $users.",{\"oi\":".jsonstr($u_openid).",\"nn\":".jsonstr($u_nickname).",\"sx\":".jsonstrval($u_sex).",\"ct\":".jsonstr($u_city).",\"pr\":".jsonstr($u_province).",\"cn\":".jsonstr($u_country).",\"hd\":".jsonstr($u_headimgurl).",\"st\":".jsonstr($u_subscribe_time).",\"ui\":".jsonstr($u_unionid).",\"cr\":".jsonstr($ucr_credit)."}";
       }
       mysqli_free_result($result);
       $users = substr($users, 1);
@@ -119,32 +124,19 @@ function get_users()
         $query_1 = $query_1."u_openid";
         $param = $openid;
       }
-      $query_1 = $query_1."=? AND u_subscribe=1 LIMIT ".strval($start).",".strval($per_page);
+      $query_1 = $query_1 . "='" . strval($param) ."' AND u_subscribe=1 LIMIT ".strval($start).",".strval($per_page);
 
-      if ($stmt_1 = mysqli_prepare($con, $query_1))
+      if ($result = mysqli_query($con, $query_1))
       {
-        mysqli_stmt_bind_param($stmt_1, "s", $param);
-        $flag = mysqli_stmt_execute($stmt_1);
-        if ($flag)
+        if ($row = mysqli_fetch_array($result))
         {
-          if ($result = mysqli_stmt_get_result($stmt_1))
-          {
-            if ($row = mysqli_fetch_array($result))
-            {
-              $total = $row['total'];
-              mysqli_free_result($result);
-            }
-          }
-          else
-          {
-            $json = "{\"result\":0,\"error\":".$errors["db read failure"]."}";
-          }
+          $total = $row['total'];
+          mysqli_free_result($result);
         }
         else
         {
-          $json = "{\"result\":0,\"error\":".$errors["internal error"]."}";
+          $json = "{\"result\":0,\"error\":".$errors["db read failure"]."}";
         }
-        mysqli_stmt_close($stmt_1);
       }
       else
       {
@@ -155,7 +147,10 @@ function get_users()
 
     if ($page > 1 || $total > 0)
     {
-      $query_2 = "SELECT u_openid, u_nickname, u_sex, u_city, u_province, u_country, u_headimgurl, u_subscribe_time, u_unionid FROM users_u WHERE "; // u_subscribe=1 ORDER BY u_subscribe_time ".$order." LIMIT ".strval($start).",".strval($per_page);
+      $query_2 = "SELECT u_openid, u_nickname, u_sex, u_city, u_province, u_country, u_headimgurl, u_subscribe_time, u_unionid, ucr_credit  
+                  FROM users_u 
+                  LEFT OUTER JOIN user_credits_ucr ON u_openid = ucr_openid 
+                  WHERE "; // u_subscribe=1 ORDER BY u_subscribe_time ".$order." LIMIT ".strval($start).",".strval($per_page);
       if (is_null($openid))
       {
         $query_2 = $query_2."u_nickname";
@@ -166,48 +161,31 @@ function get_users()
         $query_2 = $query_2."u_openid";
         $param = $openid;
       }
-      $query_2 = $query_2."=? AND u_subscribe=1 LIMIT ".strval($start).",".strval($per_page);
+      $query_2 = $query_2."='" . $param . "' AND u_subscribe=1 LIMIT ".strval($start).",".strval($per_page);
 
-      if ($stmt_2 = mysqli_prepare($con, $query_2))
+      if ($result = mysqli_query($con, $query_2))
       {
-        mysqli_stmt_bind_param($stmt_2, "s", $param);
-        $flag = mysqli_stmt_execute($stmt_2);
-        if ($flag)
+        if ($row = mysqli_fetch_array($result))
         {
-          if ($result = mysqli_stmt_get_result($stmt_2))
-          {
-            while ($row = mysqli_fetch_array($result))
-            {
-              $u_openid = $row['u_openid'];
-              $u_nickname = $row['u_nickname'];
-              $u_sex = $row['u_sex'];
-              $u_city = $row['u_city'];
-              $u_province = $row['u_province'];
-              $u_country = $row['u_country'];
-              $u_headimgurl = $row['u_headimgurl'];
-              $u_subscribe_time = $row['u_subscribe_time'];
-              $u_unionid = $row['u_unionid'];
+          $u_openid = $row['u_openid'];
+          $u_nickname = $row['u_nickname'];
+          $u_sex = $row['u_sex'];
+          $u_city = $row['u_city'];
+          $u_province = $row['u_province'];
+          $u_country = $row['u_country'];
+          $u_headimgurl = $row['u_headimgurl'];
+          $u_subscribe_time = $row['u_subscribe_time'];
+          $u_unionid = $row['u_unionid'];
+          $ucr_credit = $row['ucr_credit'];
 
-              $users = $users.",{\"oi\":".jsonstr($u_openid).",\"nn\":".jsonstr($u_nickname).",\"sx\":".jsonstrval($u_sex).",\"ct\":".jsonstr($u_city).",\"pr\":".jsonstr($u_province).",\"cn\":".jsonstr($u_country).",\"hd\":".jsonstr($u_headimgurl).",\"st\":".jsonstr($u_subscribe_time).",\"ui\":".jsonstr($u_unionid)."}";
-            }
-            mysqli_free_result($result);
-            $users = substr($users, 1);
-          }
-          else
-          {
-            $json = "{\"result\":0,\"error\":".$errors["db read failure"]."}";
-          }
+          $users = $users.",{\"oi\":".jsonstr($u_openid).",\"nn\":".jsonstr($u_nickname).",\"sx\":".jsonstrval($u_sex).",\"ct\":".jsonstr($u_city).",\"pr\":".jsonstr($u_province).",\"cn\":".jsonstr($u_country).",\"hd\":".jsonstr($u_headimgurl).",\"st\":".jsonstr($u_subscribe_time).",\"ui\":".jsonstr($u_unionid).",\"cr\":".jsonstr($ucr_credit)."}";
         }
-        else
-        {
-          $json = "{\"result\":0,\"error\":".$errors["internal error"]."}";
-        }
-        mysqli_stmt_close($stmt_2);
+        mysqli_free_result($result);
+        $users = substr($users, 1);
       }
       else
       {
-        $flag = false;
-        $json = "{\"result\":0,\"error\":".$errors["internal error"]."}";
+        $json = "{\"result\":0,\"error\":".$errors["db read failure"]."}";
       }
     }
   }

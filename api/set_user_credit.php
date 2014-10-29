@@ -1,11 +1,11 @@
 <?php
 
-function set_user_credit($openid, $credit)
-//function set_user_credit()
+//function set_user_credit($openid, $credit)
+function set_user_credit()
 {
   include_once 'util_global.php';
   include_once 'util_data.php';
-/*
+
   if ($user->uid <= 0)
   {
     echo "{\"result\":0,\"error\":".$errors["not authenticated"]."}";
@@ -25,7 +25,7 @@ function set_user_credit($openid, $credit)
     exit;
   }
   $credit = str2int($_GET["c"]);
-*/
+
   $con=mysqli_connect($db_host, $db_user, $db_pwd, $db_name);
   // Check connection
   if (mysqli_connect_errno())
