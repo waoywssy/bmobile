@@ -21,11 +21,11 @@ function mboryi_permission() {
 function mboryi_menu() {
   // api function calls 
   $items['hire_complaints'] = array(
-    'title'           => t("包工举报"),
+    'title'           => t("包工举报hire"), 
     'page callback'   => 'get_complaints', 
-    'page arguments'  => array("1", "hire"),
-    'access callback' => TRUE,
-    'type'            => MENU_NORMAL_ITEM,
+    'page arguments'  => array("1", "hire"), 
+    'access callback' => TRUE, 
+    'type'            => MENU_NORMAL_ITEM, 
   );
   $items['hire_complaints/tocheck'] = array(
     'title'           => t("未处理"),
@@ -63,7 +63,7 @@ function mboryi_menu() {
   );
 
   $items['job_complaints'] = array(
-    'title'           => t("招工举报"),
+    'title'           => t("招工举报job"),
     'page callback'   => 'get_complaints', 
     'page arguments'  => array("1", "job"),
     'access callback' => TRUE,
@@ -145,13 +145,229 @@ function mboryi_menu() {
     'type'            => MENU_NORMAL_ITEM,
     'file'            => 'api/set_user_credit.php',
   );
+  
+  $items['jobfair/add'] = array(
+    'title'           => t("招聘会信息录入"), 
+    'page callback'   => 'drupal_get_form',
+    'page arguments'  => array('mboryi_jobfair_form'),
+    'access callback' => TRUE,
+    'type'            => MENU_NORMAL_ITEM, 
+  );
+  $items['company/add'] = array(
+    'title'           => t("校招企业信息录入"), 
+    'page callback'   => 'drupal_get_form',
+    'page arguments'  => array('mboryi_company_form'),
+    'access callback' => TRUE,
+    'type'            => MENU_NORMAL_ITEM, 
+  );
+  $items['job/add'] = array(
+    'title'           => t("校招职位信息录入"), 
+    'page callback'   => 'drupal_get_form',
+    'page arguments'  => array('mboryi_job_form'),
+    'access callback' => TRUE,
+    'type'            => MENU_NORMAL_ITEM, 
+  );
   return $items;
-} 
+}
+
+function mboryi_company_form($form, &$form_state){
+  $form['name'] = array(
+    '#type'         => 'textfield',
+    '#title'        => t('公司名称'),
+    '#size'         => 30,
+    '#maxlength'    => 60,
+    '#weight'       => 0,
+  );
+  $form['overview'] = array(
+    '#type'         =>'text_format',
+    '#title'        => t('公司简介'),
+    '#format'       =>'plain_text',
+    '#after_build'  => array('clean_textarea_format'),
+    '#weight'       => 5,
+  );
+  $form['benefit'] = array(
+     '#type'        =>'text_format',
+     '#title'       => t('公司福利'),
+     '#format'      =>'plain_text',
+     '#after_build' => array('clean_textarea_format'),
+     '#weight'      => 10,
+  );
+  $form['process'] = array(
+     '#type'        =>'text_format',
+     '#title'       => t('应聘流程'),
+     '#format'      =>'plain_text',
+     '#after_build' => array('clean_textarea_format'),
+     '#weight'      => 15,
+  );
+  $form['phone'] = array(
+    '#type'      => 'textfield',
+    '#title'     => t('联系电话'),
+    '#size'      => 30,
+    '#maxlength' => 60,
+    '#weight'    => 20,
+  );
+  $form['email'] = array(
+    '#type'      => 'textfield',
+    '#title'     => t('电子邮箱'),
+    '#size'      => 30,
+    '#maxlength' => 60,
+    '#weight'    => 25,
+  );
+  $form['web'] = array(
+    '#type'      => 'textfield',
+    '#title'     => t('官方网址'),
+    '#size'      => 30,
+    '#maxlength' => 60,
+    '#weight'    => 30,
+  );
+  $form['address'] = array(
+    '#type'      => 'textfield',
+    '#title'     => t('公司地址'),
+    '#size'      => 30,
+    '#maxlength' => 60,
+    '#weight'    => 35,
+  );
+  $form['actions'] = array('#type' => 'actions');
+  $form['actions']['submit'] = array(
+    '#type'  => 'submit',
+    '#value' => t('录入'),
+  );
+
+  return $form;
+}
+
+function mboryi_job_form($form, &$form_state){
+  $form['company_id'] = array(
+    '#type'          => 'hidden',
+    '#default_value' => 0
+  );
+  $form['title'] = array(
+    '#type'     =>'textfield',
+    '#title'    => t('岗位名'),
+    '#weight'   => 0,
+    '#required' =>TRUE,
+  );
+  $form['major'] = array(
+     '#type'        =>'text_format',
+     '#title'       => t('专业要求'),
+     '#format'      =>'plain_text',
+     '#after_build' => array('clean_textarea_format'),
+     '#weight'      => 5,
+  );
+    $form['edu'] = array(
+    '#type'   =>'textfield',
+    '#title'  => t('学历要求'),
+    '#weight' => 10,
+    );
+  $form['place'] = array(
+    '#type'      => 'textfield',
+    '#title'     => t('工作地'),
+    '#size'      => 30,
+    '#maxlength' => 60,
+    '#weight'    => 15,
+  );
+  $form['salary'] = array(
+    '#type'      => 'textfield',
+    '#title'     => t('薪资待遇'),
+    '#size'      => 30,
+    '#maxlength' => 60,
+    '#weight'    => 20,
+  );
+  $form['total'] = array(
+    '#type'      => 'textfield',
+    '#title'     => t('招聘人数'),
+    '#size'      => 30,
+    '#maxlength' => 60,
+    '#weight'    => 25,
+  );
+  $form['content'] = array(
+     '#type'        =>'text_format',
+     '#title'       => t('岗位描述'),
+     '#format'      =>'plain_text',
+     '#after_build' => array('clean_textarea_format'),
+     '#weight'      => 30,
+  );
+  $form['actions'] = array('#type' => 'actions');
+  $form['actions']['submit'] = array(
+    '#type'  => 'submit',
+    '#value' => t('录入'),
+  );
+
+  return $form;
+}
+
+/**
+ * Remove the filter text format area from element 'textarea'
+ */
+function clean_textarea_format(&$element){
+  unset($element['format']);
+  return $element;
+}
+
+
+function mboryi_jobfair_form($form, &$form_state){
+  $module_path = drupal_get_path('module','mboryi');
+
+  $form['university'] = array(
+    '#type'              => 'textfield',
+    '#title'             => t('学校名称'),
+    '#size'              => 30,
+    '#default_value'     => t('中南林业大学'),
+    '#weight'            => 0,
+    '#attached' => array(
+      'library' => array(
+        array('system', 'ui.autocomplete'),
+      ),
+      'js' => array(
+        "$module_path/js/universities.js",
+      ),
+    ),
+  );
+  $form['university_id'] = array(
+    '#type'          => 'hidden',
+    '#default_value' => 0
+  );
+  $form['company'] = array(
+    '#type'              => 'textfield',
+    '#title'             => t('公司名称'),
+    '#size'              => 30,
+    '#maxlength'         => 64,
+    '#default_value'     => t('长沙伯益网络'),
+    '#weight'            => 5,
+  );
+  $form['company_id'] = array(
+    '#type'          => 'hidden',
+    '#default_value' => 0
+  );
+  $form['datetime'] = array(
+    '#type'        => 'date_popup',
+    '#date_format' => 'Y-m-d h:i A',
+    '#title'       => t('举办时间'),
+    '#size'        => 30,
+    '#maxlength'   => 60,
+    '#weight'      => 10,
+  );
+  $form['address'] = array(
+    '#type'      => 'textfield',
+    '#title'     => t('举办地点'),
+    '#size'      => 30,
+    '#maxlength' => 64,
+    '#weight'    => 15,
+  );
+  $form['#attached'] = array('#type' => 'actions');
+  $form['actions'] = array('#type' => 'actions');
+  $form['actions']['submit'] = array(
+    '#type'  => 'submit',
+    '#value' => t('录入'),
+  );
+  return $form;
+}
 
 function get_complaints($type, $complaints_type){
-  $content = array();
-  $content['type'] = $type;
+  $content                    = array();
+  $content['type']            = $type;
   $content['complaints_type'] = $complaints_type;
+
   return theme('complaints', $content);
 }
 
@@ -160,8 +376,9 @@ function get_complaints($type, $complaints_type){
 // 在线用户
 // 搜索用户
 function list_users($type){
-  $content = array();
+  $content         = array();
   $content['type'] = $type;
+
   return theme('list_users', $content);
 }
 
@@ -177,6 +394,9 @@ function mboryi_theme($existing, $type, $theme, $path) {
         'path'      => $p,
         'template'  => 'list_users', 
       ),
-
+    'test' => array(
+        'path'      => $p,
+        'template'  => 'test', 
+      ),
     );
 }

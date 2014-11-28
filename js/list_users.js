@@ -75,7 +75,7 @@ Drupal.behaviors.account = {
                           .append($('<td />').append(value.st))
                           .append($('<td />').append(value.cr == null ? 0 : value.cr))
                           .append($('<td />').append(btn.clone().attr('id', uid)))
-                );
+            );
           })
 
           $('#myModal').on('show.bs.modal', function (e) {
@@ -86,7 +86,6 @@ Drupal.behaviors.account = {
 
             $("#credits").find("tr:gt(0)").remove();
             $("#credits").append(
-
               $('<tr/>') 
                 .append($('<td />').addClass('content')
                           .append($('<span />').attr('title', user.oi).append(user.oi)))
@@ -104,7 +103,6 @@ Drupal.behaviors.account = {
     }
 
     if (type == 3){
-      
       var searchUser = function() {
         var by = $("input[name='by']:checked").val();
         var target = $.trim($('#target').val());

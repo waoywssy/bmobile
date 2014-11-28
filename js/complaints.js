@@ -1,7 +1,6 @@
 (function ($, Drupal, window, document, undefined) {
 Drupal.behaviors.account = {
   attach: function(context, settings) {
-
       var apiBase = Drupal.settings.basePath + "api/";
       var getUrl = "";
       var auditUrl = "";
@@ -39,6 +38,7 @@ Drupal.behaviors.account = {
       page.currentid = null;
 
       var getPageData = function(pageNum){
+
         current_page = pageNum;
         $.getJSON(getUrl + "&p=" + pageNum, 
           function(d) {
@@ -77,17 +77,28 @@ Drupal.behaviors.account = {
               }
 
               $("#jobs").append(
-                  $('<tr/>').append($('<td />').append(value.t))
+                  $('<tr/>').append($('<td />').append($('<span />')
+                                                          .attr('data-toggle', 'modal')
+                                                          .attr('data-target', "#jobModal")
+                                                          .attr('id', 'id-' + value.id)
+                                                          .addClass('jobid')
+                                                            .append(value.t)))
                             .append($('<td />').append(btn.clone().attr('id', jid)))
                   );
             })
 
-            $('#myModal').on('show.bs.modal', function (e) {
+            $('.jobid').hover(function() {
+              $(this).css({'color':'#428bca'});
+            }, function() {
+              $(this).css({'color':'#333'});
+            });
 
+            $('#myModal').on('show.bs.modal', function (e) {
               var job = $(page.j).data(e.relatedTarget.id);
               page.currentid =  job.id;
 
               $("#complaints").find("tr:gt(0)").remove();
+              
               $.each(job.complaints, function(index, value){
                 $("#complaints").append(
                     $('<tr/>').append($('<td />').append(value.i))
@@ -103,6 +114,122 @@ Drupal.behaviors.account = {
                 r = r == null ? -1 : r;
                 $('#result').html(complaint_results[r + 2]);
               }
+            })
+
+            $('#jobModal').on('show.bs.modal', function(e) {
+              var job = $(page.j).data('jid-' + e.relatedTarget.id.substring(3));
+              page.currentid =  job.id;
+              $('#job-title').html(job.t);
+              $('#job-contact').html(job.cnt);
+              $('#job-phone').html(job.phn);
+              $('#job-email').html(job.eml);
+              $('#job-location').html(job.l);
+              $('#job-address').html(job.add);
+              $('#job-start').html(job.s);
+              $('#job-end').html(job.e);
+              $('#job-duration').html(job.d);
+              console.log(job);
+
+              if (ctype == "job"){
+                var salary = "";
+                if (job.sl != null && job.sh != null && job.sl > 0 && job.sh > 0){
+                  salary = String(job.sl) + "~" + String(job.sh) + "元";
+                }
+                else if (job.sl != null && job.sl > 0){
+                  salary = String(job.sl) + "元以上";
+                }
+                else if (job.sh != null && job.sh > 0){
+                  salary = String(job.sh) + "元以下";
+                }
+                $('#job-salary').html(salary);
+
+                var requirement = "";
+                if (job.ty != null && job.ty > 0){
+                  requirement += "&middot;" + worktypes[job.ty-1];
+                }
+                if (job.edu != null && job.edu > 0){
+                  requirement += "&middot;" + educations[job.edu-1];
+                  if (job.edu > 1 && job.edu < 6){
+                    requirement += "以上";
+                  }
+                  requirement += "学历";
+                }
+                if (job.exp != null && job.exp > 0){
+                  requirement += "&middot;" + String(job.exp) + "年以上经验";
+                }
+                if (job.sx != null){
+                  if (job.sx == 0){
+                    requirement += "&middot;" + "女";
+                  }
+                  else {
+                    requirement += "&middot;" + "男";
+                  }
+                }
+                if (job.al != null && job.ah != null && job.al > 0 && job.ah > 0){
+                  requirement += "&middot;" + String(job.al) + "~" + String(job.ah) + "岁";
+                }
+                else if (job.al != null && job.al > 0){
+                  requirement += "&middot;" + String(job.al) + "岁以上";
+                }
+                else if (job.ah != null && job.ah > 0){
+                  requirement += "&middot;" + String(job.ah) + "岁以下";
+                }
+                if (job.hl != null && job.hh != null && job.hl > 0 && job.hh > 0){
+                  requirement += "&middot;" + String(job.hl) + "~" + String(job.hh) + "公分";
+                }
+                else if (job.hl != null && job.hl > 0){
+                  requirement += "&middot;" + String(job.hl) + "公分以上";
+                }
+                else if (job.hh != null && job.hh > 0){
+                  requirement += "&middot;" + String(job.hh) + "公分以下";
+                }
+                if (requirement.length > 0){
+                  requirement = requirement.substr(8);
+                }
+
+                if (job.rqr){
+                  requirement = '<br /><br /><label />' + requirement + '<br />';
+                }
+
+                var benefit = "";
+                if (job.ss){
+                  benefit += "&middot;" + "社保";
+                }
+                if (job.hf){
+                  benefit += "&middot;" + "公积金";
+                }
+                if (job.av){
+                  benefit += "&middot;" + "年休假";
+                }
+                if (job.hs){
+                  benefit += "&middot;" + "住宿";
+                }
+                if (job.ml){
+                  benefit += "&middot;" + "工作餐";
+                }
+                if (job.tr){
+                  benefit += "&middot;" + "无出差";
+                }
+                if (job.ot){
+                  benefit += "&middot;" + "无加班";
+                }
+                if (job.ns){
+                  benefit += "&middot;" + "无夜班";
+                }
+                if (benefit.length > 0){
+                  benefit = benefit.substr(8);
+                }
+                if (job.dsc){
+                  benefit = '<br /><br /><label />' + benefit + '<br />';
+                }
+                $('#job-company').html(job.c);
+                $('#job-requirement').html(job.rqr + requirement);
+                $('#job-content').html(job.dsc + benefit);
+                $('#job-benefit').html(job.bnf);
+              } else {
+                $('#job-content').html(job.c);
+              }
+
             })
           })
         .fail(function( jqxhr, textStatus, error ) {

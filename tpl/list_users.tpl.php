@@ -15,14 +15,12 @@
   width:120%!important;
 }
 </style>
-
 <?php
 $module_path = drupal_get_path('module','mboryi');
 drupal_add_js($module_path . '/js/complaint_types.js');
 drupal_add_js($module_path . '/js/jquery.simplePagination.js');
 drupal_add_js($module_path . '/js/list_users.js');
 ?>
-
 <?php if ($type == "3"){ ?> 
 <div class="navbar-form navbar-left" role="search">
   <div class="form-group">
@@ -37,7 +35,6 @@ drupal_add_js($module_path . '/js/list_users.js');
 <br />
 <br />
 <?php } ?>
-
 <table class="table table-bordered table-striped table-responsive" id="users">
 <thead>
 <tr><th>昵称</th><th>性别</th><th>城市</th><th>省份</th><th>国家</th><th>关注时间</th><th>积分</th><th>更改</th></tr>
