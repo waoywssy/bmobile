@@ -1,5 +1,5 @@
 (function ($, Drupal, window, document, undefined) {
-Drupal.behaviors.account = {
+Drupal.behaviors.list_users = {
   attach: function(context, settings) {
     var apiBase = Drupal.settings.basePath + "api/";
     var getUrl = "";
@@ -44,7 +44,7 @@ Drupal.behaviors.account = {
           if (users.length == 0){
             $("#users").append(
               $('<tr/>').append(
-                $('<td />').addClass('info').attr('colspan', '8').attr('align', 'center').append('没有结果'))
+                $('<td />').addClass('info').attr('colspan', '9').attr('align', 'center').append('没有结果'))
             );
             return;
           }

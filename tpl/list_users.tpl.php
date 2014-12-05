@@ -37,7 +37,7 @@ drupal_add_js($module_path . '/js/list_users.js');
 <?php } ?>
 <table class="table table-bordered table-striped table-responsive" id="users">
 <thead>
-<tr><th>昵称</th><th>性别</th><th>城市</th><th>省份</th><th>国家</th><th>关注时间</th><th>积分</th><th>更改</th></tr>
+<tr><th>昵称</th><th>性别</th><th>城市</th><th>省份</th><th>国家</th><th>关注时间</th><th>积分</th><th class="col-xs-1">更改</th></tr>
 </thead>
 <tbody>
 </tbody>

@@ -5,11 +5,12 @@ global $user;
 $db_host = "localhost";
 $db_user = "root";
 $db_pwd = "";
-$db_name = "b_site";
+$db_name = "boryi_nearby_jobs";
 
 // products displaying / listing
 $max_pages = 50;
-$per_page = 20;
+//$per_page = 20;
+$per_page = 3;
 
 // convert string to interger with default value
 function str2int($str, $default = 0)
@@ -94,6 +95,11 @@ function jsonnewline($str)
 function sqlstr($str)
 {
   return (is_null($str) || empty($str)) ? "null" : "'".str_replace("'", "\\'", $str)."'";
+}
+
+function sqlescapequote($str)
+{
+  return (is_null($str) || empty($str)) ? "null" : str_replace("'", "\\'", $str);
 }
 
 function sqlstrval($val)

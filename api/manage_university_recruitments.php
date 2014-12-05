@@ -1,11 +1,10 @@
 <?php
-include_once 'util_global.php';
-include_once 'util_data.php';
-
-function manage_university_recruitments($type, $universityid, $companyid, $date, $place)
-//function manage_university_recruitments()
+//function manage_university_recruitments($type, $universityid, $companyid, $date, $place)
+function manage_university_recruitments()
 {
-/*
+  include_once 'util_global.php';
+  include_once 'util_data.php';
+
   if ($user->uid <= 0)
   {
     echo "{\"result\":0,\"error\":".$errors["not authenticated"]."}";
@@ -24,7 +23,7 @@ function manage_university_recruitments($type, $universityid, $companyid, $date,
     $type = 1;
   }
   $universityid = isset($_POST["ui"]) ? str2int($_POST["ui"]) : 0;
-  if ($companyid <= 0)
+  if ($universityid <= 0)
   {
     echo "{\"result\":0,\"error\":".$errors["missing params"]."}";
     exit;
@@ -32,8 +31,8 @@ function manage_university_recruitments($type, $universityid, $companyid, $date,
   $companyid = isset($_POST["ci"]) ? str2int($_POST["ci"]) : 0;
   $date = isset($_POST["d"]) ? str2datetime($_POST["d"]) : null;
   $place = isset($_POST["p"]) ? $_POST["p"] : null;
-*/
-  global $db_host, $db_user, $db_pwd, $db_name, $errors;
+
+  //global $db_host, $db_user, $db_pwd, $db_name, $errors;
   $con=mysqli_connect($db_host, $db_user, $db_pwd, $db_name);
   // Check connection
   if (mysqli_connect_errno())
@@ -77,12 +76,12 @@ function manage_university_recruitments($type, $universityid, $companyid, $date,
           $unv_cmp_id = $row['unv_cmp_id'];
           $unv_cmp_name = $row['unv_cmp_name'];
 
-          $recruitments = $recruitments.",{\"i\":".sqlstrval($unv_cmp_id).",\"n\":".sqlstr($unv_cmp_name).",\"d\":".sqlstr($unv_rcr_date).",\"p\":".sqlstr($unv_rcr_place)."}";
+          $recruitments = $recruitments.",{\"i\":".jsonstr($unv_cmp_id).",\"n\":".jsonstr($unv_cmp_name).",\"d\":".jsonstr($unv_rcr_date).",\"p\":".jsonstr($unv_rcr_place)."}";
         }
         mysqli_free_result($result);
         $recruitments = substr($recruitments, 1);
       }
-      $json = "{\"t\":".$total.",\"r\":[".$recruitments."]}";;
+      $json = "{\"t\":".$total.",\"r\":[".$recruitments."]}";
       break;
     case 2:
       $query = "INSERT IGNORE INTO university_recruitments_unv_rcr (unv_rcr_unv_id, unv_rcr_date, unv_rcr_unv_cmp_id, unv_rcr_place) VALUES (".sqlstrval($universityid).",".sqlstr($date->format("Y-m-d\TH:i:sP")).",".sqlstrval($companyid).",".sqlstr($place).")";
@@ -108,7 +107,9 @@ function manage_university_recruitments($type, $universityid, $companyid, $date,
       break;
     case 4:
       $query = "DELETE FROM university_recruitments_unv_rcr WHERE nv_rcr_unv_id=".sqlstrval($universityid)." AND unv_rcr_unv_cmp_id=".sqlstrval($companyid);
-      if (!mysqli_query($con, $query))
+      echo $query;
+      if (false)
+        //if (!mysqli_query($con, $query))
       {
         $json = "{\"result\":0,\"error\":".$errors["db write failure"]."}";
       }
@@ -118,10 +119,10 @@ function manage_university_recruitments($type, $universityid, $companyid, $date,
       }
       break;
   }
-
+  echo $json;
   //mysqli_commit($con);
   //mysqli_rollback($con);
-  //mysqli_query($con, "UNLOCK TABLES");
+  mysqli_query($con, "UNLOCK TABLES");
 
   mysqli_kill($con, mysqli_thread_id($con));
   mysqli_close($con);

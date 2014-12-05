@@ -1,5 +1,5 @@
 (function ($, Drupal, window, document, undefined) {
-Drupal.behaviors.account = {
+Drupal.behaviors.complaints = {
   attach: function(context, settings) {
       var apiBase = Drupal.settings.basePath + "api/";
       var getUrl = "";

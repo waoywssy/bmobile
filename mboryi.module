@@ -24,12 +24,14 @@ function mboryi_menu() {
     'title'           => t("包工举报hire"), 
     'page callback'   => 'get_complaints', 
     'page arguments'  => array("1", "hire"), 
-    'access callback' => TRUE, 
+    'access callback' => 'user_access',
+    'access arguments' => array('authenticated user'),
     'type'            => MENU_NORMAL_ITEM, 
   );
   $items['hire_complaints/tocheck'] = array(
     'title'           => t("未处理"),
-    'access callback' => TRUE,
+    'access callback' => 'user_access',
+    'access arguments' => array('authenticated user'),
     'type'            => MENU_DEFAULT_LOCAL_TASK,
     'weight'          => 0,
   );
@@ -37,7 +39,8 @@ function mboryi_menu() {
     'title'           => t("处理中"),
     'page callback'   => 'get_complaints', 
     'page arguments'  => array("2", "hire"),
-    'access callback' => TRUE,
+    'access callback' => 'user_access',
+    'access arguments' => array('authenticated user'),
     'type'            => MENU_LOCAL_TASK,
     'weight'          => 5,
   );
@@ -45,19 +48,22 @@ function mboryi_menu() {
     'title'           => t("已处理"),
     'page callback'   => 'get_complaints', 
     'page arguments'  => array("3", "hire"),
-    'access callback' => TRUE,
+    'access callback' => 'user_access',
+    'access arguments' => array('authenticated user'),
     'type'            => MENU_LOCAL_TASK,
     'weight'          => 10,
   );
   $items['api/get_hire_complaints'] = array(
     'page callback'   => 'get_hire_complaints', 
-    'access callback' => TRUE,
+    'access callback' => 'user_access',
+    'access arguments' => array('authenticated user'),
     'type'            => MENU_NORMAL_ITEM,
     'file'            => 'api/get_hire_complaints.php',
   );
   $items['api/audit_hire_complaint'] = array(
     'page callback'   => 'audit_hire_complaint', 
-    'access callback' => TRUE,
+    'access callback' => 'user_access',
+    'access arguments' => array('authenticated user'),
     'type'            => MENU_NORMAL_ITEM,
     'file'            => 'api/audit_hire_complaint.php',
   );
@@ -66,12 +72,14 @@ function mboryi_menu() {
     'title'           => t("招工举报job"),
     'page callback'   => 'get_complaints', 
     'page arguments'  => array("1", "job"),
-    'access callback' => TRUE,
+    'access callback' => 'user_access',
+    'access arguments' => array('authenticated user'),
     'type'            => MENU_NORMAL_ITEM, 
   );
   $items['job_complaints/tocheck'] = array(
     'title'           => t("未处理"),
-    'access callback' => TRUE,
+    'access callback' => 'user_access',
+    'access arguments' => array('authenticated user'),
     'type'            => MENU_DEFAULT_LOCAL_TASK,
     'weight'          => 0,
   );
@@ -79,7 +87,8 @@ function mboryi_menu() {
     'title'           => t("处理中"),
     'page callback'   => 'get_complaints', 
     'page arguments'  => array("2", "job"),
-    'access callback' => TRUE,
+    'access callback' => 'user_access',
+    'access arguments' => array('authenticated user'),
     'type'            => MENU_LOCAL_TASK,
     'weight'          => 5,
   );
@@ -87,19 +96,22 @@ function mboryi_menu() {
     'title'           => t("已处理"),
     'page callback'   => 'get_complaints', 
     'page arguments'  => array("3", "job"),
-    'access callback' => TRUE,
+    'access callback' => 'user_access',
+    'access arguments' => array('authenticated user'),
     'type'            => MENU_LOCAL_TASK,
     'weight'          => 10,
   );
   $items['api/get_job_complaints'] = array(
     'page callback'   => 'get_job_complaints', 
-    'access callback' => TRUE,
+    'access callback' => 'user_access',
+    'access arguments' => array('authenticated user'),
     'type'            => MENU_NORMAL_ITEM,
     'file'            => 'api/get_job_complaints.php',
   );
   $items['api/audit_job_complaint'] = array(
     'page callback'   => 'audit_job_complaint', 
-    'access callback' => TRUE,
+    'access callback' => 'user_access',
+    'access arguments' => array('authenticated user'),
     'type'            => MENU_NORMAL_ITEM,
     'file'            => 'api/audit_job_complaint.php',
   );
@@ -107,7 +119,8 @@ function mboryi_menu() {
     'title'           => t("订阅用户"),
     'page callback'   => 'list_users', 
     'page arguments'  => array("1"),
-    'access callback' => TRUE,
+    'access callback' => 'user_access',
+    'access arguments' => array('authenticated user'),
     'type'            => MENU_NORMAL_ITEM,
     'weight'          => 10,
   );
@@ -115,7 +128,8 @@ function mboryi_menu() {
     'title'           => t("在线用户"),
     'page callback'   => 'list_users', 
     'page arguments'  => array("2"),
-    'access callback' => TRUE,
+    'access callback' => 'user_access',
+    'access arguments' => array('authenticated user'),
     'type'            => MENU_NORMAL_ITEM,
     'weight'          => 20,
   );
@@ -123,166 +137,240 @@ function mboryi_menu() {
     'title'           => t("搜索用户"),
     'page callback'   => 'list_users', 
     'page arguments'  => array("3"),
-    'access callback' => TRUE,
+    'access callback' => 'user_access',
+    'access arguments' => array('authenticated user'),
     'type'            => MENU_NORMAL_ITEM,
     'weight'          => 30,
   );
   $items['api/get_users'] = array(
     'page callback'   => 'get_users', 
-    'access callback' => TRUE,
+    'access callback' => 'user_access',
+    'access arguments' => array('authenticated user'),
     'type'            => MENU_NORMAL_ITEM,
     'file'            => 'api/get_users.php',
   );
   $items['api/get_online_users'] = array(
     'page callback'   => 'get_online_users', 
-    'access callback' => TRUE,
+    'access callback' => 'user_access',
+    'access arguments' => array('authenticated user'),
     'type'            => MENU_NORMAL_ITEM,
     'file'            => 'api/get_online_users.php',
   );
   $items['api/set_user_credit'] = array(
     'page callback'   => 'set_user_credit', 
-    'access callback' => TRUE,
+    'access callback' => 'user_access',
+    'access arguments' => array('authenticated user'),
     'type'            => MENU_NORMAL_ITEM,
     'file'            => 'api/set_user_credit.php',
   );
-  
-  $items['jobfair/add'] = array(
-    'title'           => t("招聘会信息录入"), 
-    'page callback'   => 'drupal_get_form',
-    'page arguments'  => array('mboryi_jobfair_form'),
-    'access callback' => TRUE,
+  $items['company'] = array(
+    'title'           => t("校招企业信息"), 
+    'page callback'   => 'list_companies',
+    'access callback' => 'user_access',
+    'access arguments' => array('authenticated user'),
     'type'            => MENU_NORMAL_ITEM, 
   );
   $items['company/add'] = array(
     'title'           => t("校招企业信息录入"), 
     'page callback'   => 'drupal_get_form',
     'page arguments'  => array('mboryi_company_form'),
-    'access callback' => TRUE,
+    'access callback' => 'user_access',
+    'access arguments' => array('authenticated user'),
     'type'            => MENU_NORMAL_ITEM, 
   );
-  $items['job/add'] = array(
-    'title'           => t("校招职位信息录入"), 
-    'page callback'   => 'drupal_get_form',
-    'page arguments'  => array('mboryi_job_form'),
-    'access callback' => TRUE,
+  $items['company/%/%/jobs'] = array(
+    'title'           => t("校招职位信息"), 
+    'page callback'   => 'list_jobs',
+    'page arguments'  => array(1,2),
+    'access callback' => 'user_access',
+    'access arguments' => array('authenticated user'),
     'type'            => MENU_NORMAL_ITEM, 
   );
+  $items['recruitments'] = array(
+    'title'           => t("招聘会信息"),
+    'page callback'   => 'list_recruitments',
+    //'page arguments'  => array('mboryi_recruitments_form'),
+    'access callback' => 'user_access',
+    'access arguments' => array('authenticated user'),
+    'type'            => MENU_NORMAL_ITEM, 
+  );
+  $items['api/manage_university_company'] = array(
+    'page callback'   => 'manage_university_company',
+    'access callback' => 'user_access',
+    'access arguments' => array('authenticated user'),
+    'type'            => MENU_NORMAL_ITEM, 
+    'file'            => 'api/manage_university_company.php',
+  );
+
+  $items['api/manage_university_company_jobs'] = array(
+    'page callback'   => 'manage_university_company_jobs',
+    'access callback' => 'user_access',
+    'access arguments' => array('authenticated user'),
+    'type'            => MENU_NORMAL_ITEM, 
+    'file'            => 'api/manage_university_company_jobs.php',
+  );
+
+  $items['api/manage_university_recruitments'] = array(
+    'page callback'   => 'manage_university_recruitments',
+    'access callback' => 'user_access',
+    'access arguments' => array('authenticated user'),
+    'type'            => MENU_NORMAL_ITEM, 
+    'file'            => 'api/manage_university_recruitments.php',
+  );
+
+  $items['api/get_university_companies'] = array(
+    'page callback'   => 'get_university_companies',
+    'access callback' => TRUE,
+    //'access callback' => 'user_access',
+    //'access arguments' => array('authenticated user'),
+    'type'            => MENU_NORMAL_ITEM, 
+    'file'            => 'api/get_university_companies.php',
+  );
+
   return $items;
 }
 
 function mboryi_company_form($form, &$form_state){
+  $module_path = drupal_get_path('module','mboryi');
+
   $form['name'] = array(
     '#type'         => 'textfield',
-    '#title'        => t('公司名称'),
+    //'#title'        => t('公司名称'),
+    '#attributes' => array('placeholder' => '公司名称'),
+    '#required'     => TRUE,
     '#size'         => 30,
     '#maxlength'    => 60,
     '#weight'       => 0,
   );
   $form['overview'] = array(
     '#type'         =>'text_format',
-    '#title'        => t('公司简介'),
+    //'#title'        => t('公司简介'),
+    '#attributes' => array('placeholder' => '公司简介'),
     '#format'       =>'plain_text',
     '#after_build'  => array('clean_textarea_format'),
     '#weight'       => 5,
   );
   $form['benefit'] = array(
      '#type'        =>'text_format',
-     '#title'       => t('公司福利'),
+     //'#title'       => t('公司福利'),
+     '#attributes' => array('placeholder' => '公司福利'),
      '#format'      =>'plain_text',
      '#after_build' => array('clean_textarea_format'),
      '#weight'      => 10,
   );
   $form['process'] = array(
      '#type'        =>'text_format',
-     '#title'       => t('应聘流程'),
+     //'#title'       => t('应聘流程'),
+     '#attributes' => array('placeholder' => '应聘流程'),
      '#format'      =>'plain_text',
      '#after_build' => array('clean_textarea_format'),
      '#weight'      => 15,
   );
   $form['phone'] = array(
     '#type'      => 'textfield',
-    '#title'     => t('联系电话'),
+    //'#title'     => t('联系电话'),
+    '#attributes' => array('placeholder' => '联系电话'),
     '#size'      => 30,
     '#maxlength' => 60,
     '#weight'    => 20,
   );
   $form['email'] = array(
     '#type'      => 'textfield',
-    '#title'     => t('电子邮箱'),
+    //'#title'     => t('电子邮箱'),
+    '#attributes' => array('placeholder' => '电子邮箱'),
     '#size'      => 30,
     '#maxlength' => 60,
     '#weight'    => 25,
   );
   $form['web'] = array(
     '#type'      => 'textfield',
-    '#title'     => t('官方网址'),
+    //'#title'     => t('官方网址'),
+    '#attributes' => array('placeholder' => '官方网址'),
     '#size'      => 30,
     '#maxlength' => 60,
     '#weight'    => 30,
   );
   $form['address'] = array(
     '#type'      => 'textfield',
-    '#title'     => t('公司地址'),
+    //'#title'     => t('公司地址'),
+    '#attributes' => array('placeholder' => '公司地址'),
     '#size'      => 30,
     '#maxlength' => 60,
     '#weight'    => 35,
   );
   $form['actions'] = array('#type' => 'actions');
   $form['actions']['submit'] = array(
+    '#id'    =>'add',
     '#type'  => 'submit',
     '#value' => t('录入'),
   );
+  $form['#attached'] = array(
+      'js' => array(
+        "$module_path/js/jquery.validate.js",
+        "$module_path/js/add_company.js",
+      ),
+    );
 
   return $form;
 }
 
 function mboryi_job_form($form, &$form_state){
+
+  $module_path = drupal_get_path('module','mboryi');
+
   $form['company_id'] = array(
     '#type'          => 'hidden',
     '#default_value' => 0
   );
   $form['title'] = array(
-    '#type'     =>'textfield',
-    '#title'    => t('岗位名'),
-    '#weight'   => 0,
-    '#required' =>TRUE,
+    '#type'       =>'textfield',
+    //'#title'    => t('岗位名'),
+    '#attributes' => array('placeholder' => '岗位名'),
+    '#weight'     => 0,
+    '#required'   =>TRUE,
   );
   $form['major'] = array(
      '#type'        =>'text_format',
-     '#title'       => t('专业要求'),
+     //'#title'     => t('专业要求'),
+     '#attributes'  => array('placeholder' => '专业要求'),
      '#format'      =>'plain_text',
      '#after_build' => array('clean_textarea_format'),
      '#weight'      => 5,
   );
-    $form['edu'] = array(
-    '#type'   =>'textfield',
-    '#title'  => t('学历要求'),
-    '#weight' => 10,
+  $form['edu'] = array(
+    '#type'       =>'textfield',
+    //'#title'    => t('学历要求'),
+    '#attributes' => array('placeholder' => '学历要求'),
+    '#weight'     => 10,
     );
   $form['place'] = array(
-    '#type'      => 'textfield',
-    '#title'     => t('工作地'),
-    '#size'      => 30,
-    '#maxlength' => 60,
-    '#weight'    => 15,
+    '#type'       => 'textfield',
+    //'#title'    => t('工作地'),
+    '#attributes' => array('placeholder' => '工作地'),
+    '#size'       => 30,
+    '#maxlength'  => 60,
+    '#weight'     => 15,
   );
   $form['salary'] = array(
-    '#type'      => 'textfield',
-    '#title'     => t('薪资待遇'),
-    '#size'      => 30,
-    '#maxlength' => 60,
-    '#weight'    => 20,
+    '#type'       => 'textfield',
+    //'#title'    => t('薪资待遇'),
+    '#attributes' => array('placeholder' => '薪资待遇'),
+    '#size'       => 30,
+    '#maxlength'  => 60,
+    '#weight'     => 20,
   );
   $form['total'] = array(
-    '#type'      => 'textfield',
-    '#title'     => t('招聘人数'),
-    '#size'      => 30,
-    '#maxlength' => 60,
-    '#weight'    => 25,
+    '#type'       => 'textfield',
+    //'#title'    => t('招聘人数'),
+    '#attributes' => array('placeholder' => '招聘人数'),
+    '#size'       => 30,
+    '#maxlength'  => 60,
+    '#weight'     => 25,
   );
   $form['content'] = array(
      '#type'        =>'text_format',
-     '#title'       => t('岗位描述'),
+     //'#title'     => t('岗位描述'),
+     '#attributes'  => array('placeholder' => '岗位描述'),
      '#format'      =>'plain_text',
      '#after_build' => array('clean_textarea_format'),
      '#weight'      => 30,
@@ -292,6 +380,12 @@ function mboryi_job_form($form, &$form_state){
     '#type'  => 'submit',
     '#value' => t('录入'),
   );
+  $form['#attached'] = array(
+      'js' => array(
+        "$module_path/js/jquery.validate.js",
+        "$module_path/js/list_jobs.js"
+      ),
+    );
 
   return $form;
 }
@@ -305,16 +399,16 @@ function clean_textarea_format(&$element){
 }
 
 
-function mboryi_jobfair_form($form, &$form_state){
+function mboryi_recruitments_form($form, &$form_state){
   $module_path = drupal_get_path('module','mboryi');
 
   $form['university'] = array(
-    '#type'              => 'textfield',
-    '#title'             => t('学校名称'),
-    '#size'              => 30,
-    '#default_value'     => t('中南林业大学'),
-    '#weight'            => 0,
-    '#attached' => array(
+    '#type'          => 'textfield',
+    '#attributes'    => array('placeholder' => '学校名称'),
+    '#size'          => 30,
+    '#weight'        => 0,
+    '#required'      => TRUE,
+    '#attached'      => array(
       'library' => array(
         array('system', 'ui.autocomplete'),
       ),
@@ -328,12 +422,12 @@ function mboryi_jobfair_form($form, &$form_state){
     '#default_value' => 0
   );
   $form['company'] = array(
-    '#type'              => 'textfield',
-    '#title'             => t('公司名称'),
-    '#size'              => 30,
-    '#maxlength'         => 64,
-    '#default_value'     => t('长沙伯益网络'),
-    '#weight'            => 5,
+    '#type'          => 'textfield',
+    '#attributes'    => array('placeholder' => '公司名称'),
+    '#size'          => 30,
+    '#required'      => TRUE,
+    '#maxlength'     => 64,
+    '#weight'        => 5,
   );
   $form['company_id'] = array(
     '#type'          => 'hidden',
@@ -342,17 +436,21 @@ function mboryi_jobfair_form($form, &$form_state){
   $form['datetime'] = array(
     '#type'        => 'date_popup',
     '#date_format' => 'Y-m-d h:i A',
-    '#title'       => t('举办时间'),
+    //'#title'     => t('举办时间'),
+    '#required'    => TRUE,
     '#size'        => 30,
     '#maxlength'   => 60,
     '#weight'      => 10,
   );
+
   $form['address'] = array(
-    '#type'      => 'textfield',
-    '#title'     => t('举办地点'),
-    '#size'      => 30,
-    '#maxlength' => 64,
-    '#weight'    => 15,
+    '#type'       => 'textfield',
+    //'#title'    => t('举办地点'),
+    '#attributes' => array('placeholder' => '举办地点'),
+    '#required'   => TRUE,
+    '#size'       => 30,
+    '#maxlength'  => 64,
+    '#weight'     => 15,
   );
   $form['#attached'] = array('#type' => 'actions');
   $form['actions'] = array('#type' => 'actions');
@@ -360,7 +458,39 @@ function mboryi_jobfair_form($form, &$form_state){
     '#type'  => 'submit',
     '#value' => t('录入'),
   );
+  $form['#attached'] = array(
+    'js' => array(
+      "$module_path/js/jquery.validate.js",
+      "$module_path/js/list_recruitments.js"
+    ),
+  );
   return $form;
+}
+
+
+function list_jobs($company_id, $company_name){
+  // drupal_get_form('mboryi_job_form');
+  $content                 = array();
+  $content['company_id']   = $company_id; 
+  $content['company_name'] = $company_name; 
+
+  return theme('jobs', $content);
+}
+
+function list_companies(){
+  $type            = 1;
+  $content         = array();
+  $content['type'] = $type; 
+
+  return theme('companies', $content);
+}
+
+function list_recruitments(){
+  $type            = 1;
+  $content         = array();
+  $content['type'] = $type; 
+
+  return theme('recruitments', $content);
 }
 
 function get_complaints($type, $complaints_type){
@@ -370,7 +500,6 @@ function get_complaints($type, $complaints_type){
 
   return theme('complaints', $content);
 }
-
 
 // 订阅用户
 // 在线用户
@@ -394,9 +523,19 @@ function mboryi_theme($existing, $type, $theme, $path) {
         'path'      => $p,
         'template'  => 'list_users', 
       ),
-    'test' => array(
+    'companies' => array(
         'path'      => $p,
-        'template'  => 'test', 
+        'template'  => 'companies', 
+      ),
+    'jobs' => array(
+        'path'           => $p,
+        'render element' => 'form', 
+        'template'       => 'jobs', 
+      ),
+   'recruitments' => array(
+        'path'           => $p,
+        'render element' => 'form', 
+        'template'       => 'recruitments', 
       ),
     );
 }

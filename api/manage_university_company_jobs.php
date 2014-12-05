@@ -1,11 +1,10 @@
 <?php
-include_once 'util_global.php';
-include_once 'util_data.php';
-
-function manage_university_company_jobs($type, $companyid, $jobid, $title, $major, $education, $place, $salary, $total, $content)
-//function manage_university_company_jobs()
+//function manage_university_company_jobs($type, $companyid, $jobid, $title, $major, $education, $place, $salary, $total, $content)
+function manage_university_company_jobs()
 {
-/*
+  include_once 'util_global.php';
+  include_once 'util_data.php';
+
   if ($user->uid <= 0)
   {
     echo "{\"result\":0,\"error\":".$errors["not authenticated"]."}";
@@ -29,6 +28,7 @@ function manage_university_company_jobs($type, $companyid, $jobid, $title, $majo
     echo "{\"result\":0,\"error\":".$errors["missing params"]."}";
     exit;
   }
+
   $jobid = isset($_POST["ji"]) ? str2int($_POST["ji"]) : 0;
   $title = isset($_POST["jt"]) ? $_POST["jt"] : null;
   $major = isset($_POST["m"]) ? $_POST["m"] : null;
@@ -37,8 +37,14 @@ function manage_university_company_jobs($type, $companyid, $jobid, $title, $majo
   $salary = isset($_POST["s"]) ? $_POST["s"] : null;
   $total = isset($_POST["tt"]) ? $_POST["tt"] : null;
   $content = isset($_POST["c"]) ? $_POST["c"] : null;
-*/
-  global $db_host, $db_user, $db_pwd, $db_name, $errors;
+
+  if (is_numeric($total)){
+    $total = sqlstrval($total);
+  } else {
+    $total = sqlstr($total);
+  }
+
+  //global $db_host, $db_user, $db_pwd, $db_name, $errors;
   $con=mysqli_connect($db_host, $db_user, $db_pwd, $db_name);
   // Check connection
   if (mysqli_connect_errno())
@@ -49,7 +55,6 @@ function manage_university_company_jobs($type, $companyid, $jobid, $title, $majo
   mysqli_set_charset($con, "UTF8");
   //mysqli_autocommit($con, false);
 
-/*
   if ($type == 1)
   {
     mysqli_query($con, "LOCK TABLES university_company_jobs_unv_cmp_jb READ");
@@ -58,7 +63,7 @@ function manage_university_company_jobs($type, $companyid, $jobid, $title, $majo
   {
     mysqli_query($con, "LOCK TABLES university_company_jobs_unv_cmp_jb WRITE");
   }
-*/
+
   $json = "{\"result\":0,\"error\":".$errors["internal error"]."}";
   switch ($type)
   {
@@ -88,7 +93,7 @@ function manage_university_company_jobs($type, $companyid, $jobid, $title, $majo
           $unv_cmp_jb_total = $row['unv_cmp_jb_total'];
           $unv_cmp_jb_content = $row['unv_cmp_jb_content'];
 
-          $jobs = $jobs.",{\"i\":".sqlstrval($unv_cmp_jb_id).",\"t\":".sqlstr($unv_cmp_jb_title).",\"m\":".sqlstr($unv_cmp_jb_major).",\"e\":".sqlstr($unv_cmp_jb_edu).",\"p\":".sqlstr($unv_cmp_jb_place).",\"s\":".sqlstr($unv_cmp_jb_salary).",\"tt\":".sqlstr($unv_cmp_jb_total).",\"c\":".sqlstr($unv_cmp_jb_content)."}";
+          $jobs = $jobs.",{\"i\":".jsonstrval($unv_cmp_jb_id).",\"t\":".jsonstr($unv_cmp_jb_title).",\"m\":".jsonstr(jsonnewline($unv_cmp_jb_major)).",\"e\":".jsonstr($unv_cmp_jb_edu).",\"p\":".jsonstr($unv_cmp_jb_place).",\"s\":".jsonstr($unv_cmp_jb_salary).",\"tt\":".jsonstr($unv_cmp_jb_total).",\"c\":".jsonstr(jsonnewline($unv_cmp_jb_content))."}";
         }
         mysqli_free_result($result);
         $jobs = substr($jobs, 1);
@@ -96,7 +101,8 @@ function manage_university_company_jobs($type, $companyid, $jobid, $title, $majo
       $json = "{\"t\":".$jtotal.",\"j\":[".$jobs."]}";;
       break;
     case 2:
-      $query = "INSERT IGNORE INTO university_company_jobs_unv_cmp_jb (unv_cmp_jb_unv_cmp_id, unv_cmp_jb_title, unv_cmp_jb_major, unv_cmp_jb_edu, unv_cmp_jb_place, unv_cmp_jb_salary, unv_cmp_jb_total, unv_cmp_jb_content) VALUES (".sqlstrval($companyid).",".sqlstr($title).",".sqlstr($major).",".sqlstr($education).",".sqlstr($place).",".sqlstr($salary).",".sqlstrval($total).",".sqlstr($content).")";
+      
+      $query = "INSERT IGNORE INTO university_company_jobs_unv_cmp_jb (unv_cmp_jb_unv_cmp_id, unv_cmp_jb_title, unv_cmp_jb_major, unv_cmp_jb_edu, unv_cmp_jb_place, unv_cmp_jb_salary, unv_cmp_jb_total, unv_cmp_jb_content) VALUES (".sqlstrval($companyid).",".sqlstr($title).",".sqlstr($major).",".sqlstr($education).",".sqlstr($place).",".sqlstr($salary).",".$total.",".sqlstr($content).")";
       mysqli_query($con, $query);
 
       $query = "SELECT unv_cmp_jb_id FROM university_company_jobs_unv_cmp_jb WHERE unv_cmp_jb_unv_cmp_id=".sqlstrval($companyid)." AND unv_cmp_jb_title=".sqlstr($title);
@@ -136,7 +142,7 @@ function manage_university_company_jobs($type, $companyid, $jobid, $title, $majo
       }
       break;
   }
-
+  echo $json;
   //mysqli_commit($con);
   //mysqli_rollback($con);
   //mysqli_query($con, "UNLOCK TABLES");
