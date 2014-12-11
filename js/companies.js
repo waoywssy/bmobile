@@ -1,12 +1,18 @@
 (function ($, Drupal, window, document, undefined) {
 Drupal.behaviors.companies = {
   attach: function(context, settings) {
+      // method to display the information, warning or error
+      var info = function(target, msg){
+        var t = $('#' + target);
+        t.show().append(msg).fadeOut(2000, function(){t.empty();});
+      }
 
       var apiBase = Drupal.settings.basePath + "api/";
       var editUrl = Drupal.settings.basePath + 'company/edit/';
       var jobsUrl = Drupal.settings.basePath;
 
       var getUrl = apiBase + "manage_university_company";
+      var companiesUrl = apiBase + "get_university_companies";
 
       $('#target').bind('keypress', function(e){
         if(e.which == 13) {
@@ -14,15 +20,39 @@ Drupal.behaviors.companies = {
         }
       });
 
-      var company = {};
+      var cache = {}; // cache for company searching terms
+      $("#target").autocomplete({
+        minLength: 2,   
+        source: function(request, response) {
+            var term = request.term;
+            if (term in cache) {
+              response(cache[term]);
+              return;
+            }
 
+            $.getJSON(companiesUrl, request, function(data, status, xhr) {
+              cache[term] = data;
+              response(data);
+            });
+          },
+        focus: function(event, ui) {
+          $(this).val(ui.item.label);
+          return false;
+        },
+        select: function( event, ui ) {
+          $(this).val(ui.item.label);
+          return false;
+        }
+      });
+
+      var company = {};
       var getData = function(){
           $("#editForm").hide();
           $('#mboryi-company-form').find("input[type=text], textarea").val("");
 
           var target = $.trim($('#target').val());
           if (!target){
-            alert("请输入搜索条件");
+            info('msg', "请输入搜索条件");
             return;
           }
           $.post(getUrl, {n:target, t:1,}, function(data) {
@@ -88,7 +118,7 @@ Drupal.behaviors.companies = {
             add:$('#edit-address').val(),
           }, 
           function(data) {
-            alert('更新成功!');
+            info('msg', "更新成功!");
             $('#mboryi-company-form').find("input[type=text], textarea").val("");
             $("#editForm").hide();
           }, 
@@ -100,6 +130,7 @@ Drupal.behaviors.companies = {
         errorPlacement: function(error, element) {
           element.parent().append(error); // default function
         }, 
+        errorLabelContainer:'#msg',
         submitHandler: postInfo,
         rules: { 
           email:{
@@ -115,6 +146,7 @@ Drupal.behaviors.companies = {
         },
       });
   })
+  $('.alert').hide();
 }
 }
 })(jQuery, Drupal, this, this.document);

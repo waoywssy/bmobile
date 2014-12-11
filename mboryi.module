@@ -305,6 +305,9 @@ function mboryi_company_form($form, &$form_state){
     '#value' => t('录入'),
   );
   $form['#attached'] = array(
+    'library' => array(
+        array('system', 'ui.autocomplete'),
+      ),
       'js' => array(
         "$module_path/js/jquery.validate.js",
         "$module_path/js/add_company.js",
@@ -317,7 +320,6 @@ function mboryi_company_form($form, &$form_state){
 function mboryi_job_form($form, &$form_state){
 
   $module_path = drupal_get_path('module','mboryi');
-
   $form['company_id'] = array(
     '#type'          => 'hidden',
     '#default_value' => 0
@@ -435,7 +437,7 @@ function mboryi_recruitments_form($form, &$form_state){
   );
   $form['datetime'] = array(
     '#type'        => 'date_popup',
-    '#date_format' => 'Y-m-d h:i A',
+    '#date_format' => 'Y-m-d H:i',
     //'#title'     => t('举办时间'),
     '#required'    => TRUE,
     '#size'        => 30,
@@ -466,7 +468,6 @@ function mboryi_recruitments_form($form, &$form_state){
   );
   return $form;
 }
-
 
 function list_jobs($company_id, $company_name){
   // drupal_get_form('mboryi_job_form');

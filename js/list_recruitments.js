@@ -14,7 +14,8 @@ Drupal.behaviors.list_recruitments = {
     var btn = $('<button type="button" class="btn btn-warning" data-toggle="modal" data-target="#myModal"/>');
     var dbtn = $('<button type="button" class="btn btn-danger"/>');
 
-    var postType = 2; // insert
+    var postType = 2; // insert 
+    var cr = {};    // currentRecruitment
 
     /********The auto complete feature for company *******/
     var cache = {}; // cache for company searching terms
@@ -45,9 +46,15 @@ Drupal.behaviors.list_recruitments = {
     });
     /********The auto complete feature for company *******/
 
+
     var listRecruitments = function(){
       var cid = $('input[name=company_id]').val(); 
       var uid = $('input[name=university_id]').val();
+
+      cr.cid = cid;
+      cr.uid = uid;
+      cr.u = $('#searchu').val();
+      cr.c = $('#searchc').val();
 
       $.post(postUrl, {
           ci: cid, 
@@ -56,8 +63,6 @@ Drupal.behaviors.list_recruitments = {
         }, 
         function(data) {
           var rt = data.r || {};
-          console.log(rt);
-
           var table = $("#recruitments");
           table.find("tr:gt(0)").remove();
 
@@ -74,23 +79,23 @@ Drupal.behaviors.list_recruitments = {
                         //.append($('<td />').append(value.n))
                         .append($('<td />').append(value.d))
                         .append($('<td />').append(value.p))
-                        .append($('<td />').append(btn.clone().html('更改').attr('id', value.i)))
-                        .append($('<td />').append(dbtn.clone().html('删除').attr('id', 'd' + value.i)))
+                        .append($('<td />').append(btn.clone().html('更改').attr('id', value.i + '-' + uid)))
+                        .append($('<td />').append(dbtn.clone().html('删除').attr('id', 'd' + value.i + '-' + uid)))
               );
           });
 
           // *** feature delete recruitment *** //
           $('.btn-danger').bind('click', function(){
             var button = $(this); 
-            var id = button.attr('id').substr(1);
+            var ids = button.attr('id').substr(1).split('-');
             $.post(postUrl, {
                 t:4,
-                ci:id,
-                ui:$('#input[name=university_id]').val(),
+                ci:ids[0],
+                ui:ids[1],
               },
               function(d) {
                 if(d.result==1){
-                  $(button).closest('tr').remove();
+                  $("#recruitments").find("tr:gt(0)").remove();
                   info('info', '删除成功');
                 }
               },
@@ -104,18 +109,20 @@ Drupal.behaviors.list_recruitments = {
       var id = e.relatedTarget.id;
       if (id != 'search'){
         var tds = $('#' + id).closest('tr').find('td');
-        console.log(tds);
-        $('#edit-datetime').val(tds[0].innerHTML);
-        $('#edit-address').val(tds[1].innerHTML);
+        
+        var datetime = $(tds[0]).html().split(' ');
+
+        $('#edit-datetime-datepicker-popup-0').val(datetime[0]);
+        $('#edit-datetime-timeEntry-popup-1').val(datetime[1]);
+        $('#edit-address').val($(tds[1]).html());
+        $('#edit-company').val(cr.c);
+        $('#edit-university').val(cr.u);
 
         postType = 3; // update 
         $('#edit-company, #edit-university').attr('disabled', true);
       } else {
         postType = 2; // insert
         $('#edit-company, #edit-university').attr('disabled', false);
-        $('#mboryi-recruitments-form')
-            .find("input[type=text], textarea")
-            .not('#edit-university').val("");
       }
     })
 
@@ -131,31 +138,89 @@ Drupal.behaviors.list_recruitments = {
             ui: $('input[name=university_id]').val(), 
         }, 
         function(data) {
-          console.log(data);
+          // console.log(data);
           if (data.result == 1) {
-            info('modal-info', '已添加成功!'); 
+            if (type == 2){
+              info('modal-info', '已添加成功!');
+              $('#edit-company').val("");
+            } else {
+              info('modal-info', '已更新成功!');
+              $('#cancel').trigger('click');
+              listRecruitments();
+
+              $('#mboryi-recruitments-form')
+                .find("input[type=text], textarea").val("");
+            }
           }
-          $('#mboryi-recruitments-form').find("input[type=text], textarea").val("");
-          // listJobs();
+          
         }, 
         "json");
       }
 
+
+    /********Autocomplete*******/
+    $("#edit-university, #searchu").autocomplete({
+      minLength: 2,
+      source: function(request, response) {
+          var matcher = new RegExp($.ui.autocomplete.escapeRegex(request.term), "i");
+          response($.grep(schools, function(value){
+            value = value.label || value.value || value;
+            return matcher.test(value);
+          }))
+        },
+      focus: function(event, ui) {
+        $(this).val(ui.item.label);
+        $('input[name=university_id]').val(ui.item.value);
+        return false;
+      },
+      select: function( event, ui ) {
+        $(this).val(ui.item.label);
+        $('input[name=university_id]').val(ui.item.value);
+        return false;
+      }
+    });
+    /********Autocomplete*******/
+
+    var isUniversity = function(name){
+      for (var i = schools.length - 1; i >= 0; i--) {
+        if (schools[i].label == name){
+          return true;
+        }
+      };
+      return false;
+    }
+
+    $.validator.addMethod("university", function (value, element) {
+        return this.optional(element) || isUniversity(value);
+    }, "请填写学校全名");
+
     // the insert/update form validator 
-    var validator = $("#mboryi-recruitments-form").validate({
+    var validator = $("#mboryi-recruitments-form").validate({ 
       errorPlacement: function(error, element) {
-        element.parent().append(error); // default function
+        element.parent().append(error); // default function 
       }, 
       submitHandler: function(){postInfo(postType)},
       rules:{ 
         university:{ 
           required: 1,
+          university: 1,
         },
         company:{ 
           required: 1,
+          remote: {
+            url: companiesUrl,
+            type: "post",
+            data: {
+              term: function() {
+                return $("#edit-company").val();
+              },
+              check: 1,
+            }
+          }
         },
         "datetime[date]":{ 
           required: 1,
+          date: 1,
         },
         "datetime[time]":{ 
           required: 1,
@@ -164,15 +229,18 @@ Drupal.behaviors.list_recruitments = {
           required: 1,
         },
       }, 
-      messages:{
+      messages:{ 
         university:{ 
           required: "学校不能为空",
+          university: "请输入提示框中的学校全名",
         },
         company:{ 
           required: "公司不能为空",
+          remote:"公司尚未录入<a href='" + Drupal.settings.basePath + "company/add' target='blank'>立刻添加</a>",
         },
         "datetime[date]":{ 
           required: "日期不能为空",
+          date: "日期格式不正确",
         },
         "datetime[time]":{ 
           required: "时间不能为空",
@@ -196,23 +264,36 @@ Drupal.behaviors.list_recruitments = {
       errorLabelContainer:'#msg',
       submitHandler: listRecruitments,
       rules:{ 
-        searchc:{ 
-          required: 1,
-        },
         searchu:{ 
           required: 1,
+          university: 1,
+        },
+        searchc:{ 
+          required: 1,
+          remote: {
+            url: companiesUrl,
+            type: "post",
+            data: {
+              term: function() {
+                return $("#searchc").val();
+              },
+              check: 1,
+            }
+          }
         },
       }, 
       messages:{
         searchc:{
           required: "公司名称不能为空",
+          remote:"公司尚未录入",
         },
         searchu:{
           required: "学校名称不能为空",
+          university: "请输入提示框中的学校全名",
         },
       },
     });
-    /********The searching form*******/
+    /********The searching form*******/ 
     $('.alert').hide();
 }};
 })(jQuery, Drupal, this, this.document);

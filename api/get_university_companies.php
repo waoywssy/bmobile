@@ -16,7 +16,7 @@ function get_university_companies()
   }
   $usr_id = $user->uid;
 
-  $term = isset($_GET["term"]) ? $_GET["term"] : null;
+  $term = isset($_REQUEST["term"]) ? $_REQUEST["term"] : null;
   if (is_null($term))
   {
     echo "{\"result\":0,\"error\":".$errors["missing params"]."}";
@@ -32,25 +32,37 @@ function get_university_companies()
   }
 
   mysqli_set_charset($con, "UTF8");
-
   mysqli_query($con, "LOCK TABLES university_companies_unv_cmp READ");
 
   $json = "{\"result\":0,\"error\":".$errors["internal error"]."}";
   
-  $query = "SELECT unv_cmp_id, unv_cmp_name FROM university_companies_unv_cmp WHERE unv_cmp_name like  '%" . sqlescapequote($term) . "%'";
-
-  if ($result = mysqli_query($con, $query)){
-    $output = array();
-    $json = "";
-    while ($row = mysqli_fetch_array($result))
-    {
-      $jobs = $jobs.",{\"label\":".jsonstr($row['unv_cmp_name']).",\"value\":".jsonstr($row['unv_cmp_id'])."}";
+  if (!isset($_REQUEST['check'])){
+    $query = "SELECT unv_cmp_id, unv_cmp_name FROM university_companies_unv_cmp WHERE unv_cmp_name like  '%" . sqlescapequote($term) . "%'";
+    if ($result = mysqli_query($con, $query)){
+      $output = array();
+      $json = "";
+      while ($row = mysqli_fetch_array($result))
+      {
+        $jobs = $jobs.",{\"label\":".jsonstr($row['unv_cmp_name']).",\"value\":".jsonstr($row['unv_cmp_id'])."}";
+      }
+      $json = '[' . substr($jobs, 1) . ']';
     }
-    $json = '[' . substr($jobs, 1) . ']';
+    mysqli_free_result($result);
+    echo $json;
+  } else {
+    // remote validation
+    $query = "SELECT unv_cmp_id, unv_cmp_name FROM university_companies_unv_cmp WHERE unv_cmp_name = " . sqlstr($term);
+    if ($result = mysqli_query($con, $query)){
+      if ($row = mysqli_fetch_array($result))
+      {
+          echo 'true';
+      } else {
+          echo 'false';
+      }
+    }
+    mysqli_free_result($result);
   }
-  mysqli_free_result($result);
   
-  echo $json;
   //mysqli_commit($con);
   //mysqli_rollback($con);
   //mysqli_query($con, "UNLOCK TABLES");

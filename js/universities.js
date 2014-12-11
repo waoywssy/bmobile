@@ -1,10 +1,4 @@
-(function ($, Drupal, window, document, undefined) {
-Drupal.behaviors.universities = {
-  attach: function(context, settings) {
-    var apiBase = Drupal.settings.basePath + "api/";
-    var postUrl = apiBase + "get_university_companies";
-
-    var schools =[
+var schools =[
       {value:10001,label:'北京大学'},
       {value:10002,label:'中国人民大学'},
       {value:10003,label:'清华大学'},
@@ -2232,28 +2226,4 @@ Drupal.behaviors.universities = {
       {value:46507,label:'巴音郭楞职业技术学院'},
       {value:46508,label:'阿克苏职业技术学院'},
       {value:46509,label:'新疆建设职业技术学院'},
-  ];
-
-  $("#edit-university, #searchu").autocomplete({
-    minLength: 2,
-    source: function(request, response) {
-        var matcher = new RegExp($.ui.autocomplete.escapeRegex(request.term), "i");
-        response($.grep(schools, function(value){
-          value = value.label || value.value || value;
-          return matcher.test(value);
-        }))
-      },
-    focus: function(event, ui) {
-      $(this).val(ui.item.label);
-      $('input[name=university_id]').val(ui.item.value);
-      return false;
-    },
-    select: function( event, ui ) {
-      $(this).val(ui.item.label);
-      $('input[name=university_id]').val(ui.item.value);
-      return false;
-    }
-  });
-}
-}
-})(jQuery, Drupal, this, this.document);
+];

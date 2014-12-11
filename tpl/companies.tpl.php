@@ -1,4 +1,7 @@
-<?php global $base_url; ?>
+<?php
+global $base_url;
+drupal_add_library('system', 'ui.autocomplete');
+?>
 <script>
 </script>
 <style>
@@ -33,8 +36,12 @@
     </div>
   </div>
 </nav>
+<div id="msg" class="alert alert-warning fade in" role="alert" style="display:none"></div>
+<div id="info" class="alert alert-success fade in" role="alert" style="display:none"></div>
 <br />
 <div class="modal-body" style="display:none" id="model">
+  <div id="modal-msg" class="alert alert-warning fade in" role="alert"></div>
+  <div id="modal-info" class="alert alert-success fade in" role="alert"></div>
   <form role="form" class="form-horizontal">
     <div class="form-group">
       <label for="company-overview">公司简介</label>
@@ -74,6 +81,7 @@
       '#type'  => 'submit',
       '#value' => t('更新'),
     );
+  $module_path = drupal_get_path('module','mboryi');
   $form['#attached'] = array(
       'js' => array(
         "$module_path/js/jquery.validate.js",

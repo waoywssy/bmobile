@@ -7,19 +7,27 @@
   table-layout:fixed;
 }
 .table td {
-  white-space: nowrap;
+}
+.light-gray{
+  color:#999
+}
+/*
   overflow: hidden;
   text-overflow: ellipsis;
-}
+*/
 #md-content{
   width:120%!important;
 }
 </style>
 <h3><?php echo $company_name;?></h3>
-<button id="search" class="btn btn-success" data-toggle="modal" data-target="#myModal">新岗位</button><br /><br />
+<button id="search" class="btn btn-success" data-toggle="modal" data-target="#myModal">
+  <span class="glyphicon glyphicon-plus"></span> 
+</button><br /><br />
+<div id="msg" class="alert alert-warning fade in" role="alert" style="display:none"></div>
+<div id="info" class="alert alert-success fade in" role="alert" style="display:none"></div>
 <table class="table table-bordered table-striped table-responsive" id="jobs">
 <thead>
-<tr><th>岗位名</th><th>专业要求</th><th>学历要求</th><th>工作地</th><th>薪资待遇</th><th>招聘人数</th><th>岗位描述</th><th class="col-xs-1">更改</th><th class="col-xs-1">删除</th></tr>
+<tr><th class="col-xs-5">岗位名 <span class="badge">人数</span> / 工作地</th><th class="col-xs-2">学历</th><th>专业</th><th class="col-xs-1">更改</th><th class="col-xs-1">删除</th></tr>
 </thead>
 <tbody>
 </tbody>
@@ -32,6 +40,8 @@
         <h4 class="modal-title" id="myModalLabel">工作职位</h4>
       </div>
       <div class="modal-body">
+        <div id="modal-msg" class="alert alert-warning fade in" role="alert" style="display:none"></div>
+        <div id="modal-info" class="alert alert-success fade in" role="alert" style="display:none"></div>
       <?php
         $form = drupal_get_form('mboryi_job_form');
         hide($form['actions']['submit']);

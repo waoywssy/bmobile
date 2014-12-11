@@ -95,7 +95,8 @@ function manage_university_recruitments()
       }
       break;
     case 3:
-      $query = "UPDATE university_recruitments_unv_rcr SET unv_rcr_date=".sqlstr($date->format("Y-m-d\TH:i:sP")).",unv_rcr_place=".sqlstr($place)." WHERE nv_rcr_unv_id=".sqlstrval($universityid)." AND unv_rcr_unv_cmp_id=".sqlstrval($companyid);
+      $query = "UPDATE university_recruitments_unv_rcr SET unv_rcr_date=".sqlstr($date->format("Y-m-d\TH:i:sP")).",unv_rcr_place=".sqlstr($place)." WHERE unv_rcr_unv_id=".sqlstrval($universityid)." AND unv_rcr_unv_cmp_id=".sqlstrval($companyid);
+//      echo $query;
       if (!mysqli_query($con, $query))
       {
         $json = "{\"result\":0,\"error\":".$errors["db write failure"]."}";
@@ -106,10 +107,8 @@ function manage_university_recruitments()
       }
       break;
     case 4:
-      $query = "DELETE FROM university_recruitments_unv_rcr WHERE nv_rcr_unv_id=".sqlstrval($universityid)." AND unv_rcr_unv_cmp_id=".sqlstrval($companyid);
-      echo $query;
-      if (false)
-        //if (!mysqli_query($con, $query))
+      $query = "DELETE FROM university_recruitments_unv_rcr WHERE unv_rcr_unv_id=".sqlstrval($universityid)." AND unv_rcr_unv_cmp_id=".sqlstrval($companyid);
+      if (!mysqli_query($con, $query))
       {
         $json = "{\"result\":0,\"error\":".$errors["db write failure"]."}";
       }

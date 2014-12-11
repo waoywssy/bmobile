@@ -32,16 +32,20 @@
         <div class="form-group">
         <input id="searchc" name="searchc" type="text" class="form-control" placeholder="公司名称" value="">
         </div>
-        <button id="search" class="btn btn-default">搜索</button>
+        <button id="search" class="btn btn-default ">
+           <span class="glyphicon glyphicon-search"></span> 
+        </button>
       </form>
       <ul class="nav navbar-form navbar-nav navbar-right">
-        <button id="search" class="btn btn-success" data-toggle="modal" data-target="#myModal">新招聘会</button>
+        <button id="search" class="btn btn-success" data-toggle="modal" data-target="#myModal">
+          <span class="glyphicon glyphicon-plus"></span> 
+        </button>
       </ul>
     </div>
   </div>
 </nav>
-<div id="msg" class="alert alert-warning fade in" role="alert"></div>
-<div id="info" class="alert alert-success fade in" role="alert"></div>
+<div id="msg" class="alert alert-warning fade in" role="alert" style="display:none"></div>
+<div id="info" class="alert alert-success fade in" role="alert" style="display:none"></div>
 <table class="table table-bordered table-striped table-responsive" id="recruitments">
 <thead>
 <tr><th class="col-xs-3">招聘会时间</th><th>地点</th><th class="col-xs-1">更改</th><th class="col-xs-1">删除</th></tr>
@@ -57,8 +61,8 @@
         <h4 class="modal-title" id="myModalLabel">校园招聘会</h4>
       </div>
       <div class="modal-body">
-        <div id="modal-msg" class="alert alert-warning fade in" role="alert"></div>
-        <div id="modal-info" class="alert alert-success fade in" role="alert"></div>
+        <div id="modal-msg" class="alert alert-warning fade in" role="alert" style="display:none"></div>
+        <div id="modal-info" class="alert alert-success fade in" role="alert" style="display:none"></div>
       <?php
         $form = drupal_get_form('mboryi_recruitments_form');
 
@@ -66,11 +70,8 @@
         $form['datetime']['time']['#attributes']['placeholder'] = '举办时间';
         $form['datetime']['date']['#title']                     = '';
         $form['datetime']['time']['#title']                     = '';
-//        $form['company']['#field_suffix'] = '<button type="button" class="btn btn-success"><span class="glyphicon glyphicon-plus"></span></button>';
-
         hide($form['actions']['submit']);
         echo drupal_render($form);
-        //var_dump($form['company']);
       ?>
       </div>
       <div class="modal-footer">

@@ -1,14 +1,25 @@
 (function ($, Drupal, window, document, undefined) {
 Drupal.behaviors.list_jobs = {
   attach: function(context, settings) {
+    // method to display the information, warning or error
+    var info = function(target, msg){
+      var t = $('#' + target);
+      t.show().append(msg).fadeOut(2000, function(){t.empty();});
+    }
+
     var apiBase = Drupal.settings.basePath + "api/";
     var postUrl = apiBase + "manage_university_company_jobs";
 
     var btn = $('<button type="button" class="btn btn-warning" data-toggle="modal" data-target="#myModal"/>');
     var dbtn = $('<button type="button" class="btn btn-danger"/>');
+    var badge = $('<span class="badge"/>');
+    var tip = $('<span data-toggle="tooltip" data-placement="right" class="tips" title=""/>');
+//    var sign = $('<span class="glyphicon glyphicon-info-sign" />');
 
     var postType = 2; // insert
     var jobid;  // the current jobid
+
+    var jobCache = [];
 
     var listJobs = function(){
       $.post(postUrl, {
@@ -16,31 +27,33 @@ Drupal.behaviors.list_jobs = {
           ci:company_id,
         }, 
         function(d) {
-          var jobs = d.j || {};
+          jobs = d.j || {};
           $("#jobs").find("tr:gt(0)").remove();
 
           if (jobs.length == 0){
             $("#jobs").append(
               $('<tr/>').append(
-                $('<td />').addClass('info').attr('colspan', '9').attr('align', 'center').append('没有结果'))
+                $('<td />').addClass('info').attr('colspan', '5').attr('align', 'center').append('没有结果'))
             );
             return;
           }
 
           $.each(jobs, function(index, value){
             var jid = value.i;
+            jobCache[jid] = value;
             $("#jobs").append(
-                $('<tr/>').append($('<td />').append(value.t))
-                          .append($('<td />').append(value.m))
+                $('<tr/>').append($('<td />').append(tip.clone().attr('data-original-title', value.c + value.s).append(value.t))
+                                             .append(badge.clone().append(value.tt))
+                                             .append('<br/><br/><span class="light-gray">' + value.p + '</span>'))
                           .append($('<td />').append(value.e))
-                          .append($('<td />').append(value.p))
-                          .append($('<td />').append(value.s))
-                          .append($('<td />').append(value.tt))
-                          .append($('<td />').append(value.c))
+                          .append($('<td />').append(value.m))
                           .append($('<td />').append(btn.clone().html('更改').attr('id', jid)))
                           .append($('<td />').append(dbtn.clone().html('删除').attr('id', 'd' + jid)))
                 );
           })
+          console.log(jobCache);
+
+          $('.tips').tooltip({delay: { "show": 500, "hide": 100 }});
 
           // *** feature delete job *** //
           $('.btn-danger').bind('click', function(){
@@ -64,17 +77,17 @@ Drupal.behaviors.list_jobs = {
 
   $('#myModal').on('show.bs.modal', function (e) {
     var id = e.relatedTarget.id;
+    jobid = id;
     if (id != 'search'){
-      jobid = id;
       var tds = $('#' + id).closest('tr').find('td');
       
-      $('#edit-title').val(tds[0].innerHTML);
-      $('#edit-major-value').val(tds[1].innerHTML);
-      $('#edit-edu').val(tds[2].innerHTML);
-      $('#edit-place').val(tds[3].innerHTML);
-      $('#edit-salary').val(tds[4].innerHTML);
-      $('#edit-total').val(tds[5].innerHTML);
-      $('#edit-content-value').val(tds[6].innerHTML);
+      $('#edit-title').val(jobCache[id].t);
+      $('#edit-major-value').val(jobCache[id].m);
+      $('#edit-edu').val(jobCache[id].e);
+      $('#edit-place').val(jobCache[id].p);
+      $('#edit-salary').val(jobCache[id].s);
+      $('#edit-total').val(jobCache[id].tt);
+      $('#edit-content-value').val(jobCache[id].c);
 
       postType = 3; // update 
       $('#edit-title').attr('disabled', true);
@@ -105,10 +118,11 @@ Drupal.behaviors.list_jobs = {
 
       $.post(postUrl, postParams, 
         function(data) {
-          // alert('添加成功!');
-          $('#cancel').trigger('click');
+          info('modal-info', '添加成功!');
+          if (type==3){
+            $('#cancel').trigger('click');
+          }
           $('#mboryi-job-form').find("input[type=text], textarea").val("");
-
           listJobs();
         }, 
         "json");
@@ -147,5 +161,6 @@ Drupal.behaviors.list_jobs = {
     $('#edit-submit').click(function(){$("#mboryi-job-form").submit()});
 
     listJobs();
+    $('.alert').hide();
 }};
 })(jQuery, Drupal, this, this.document);

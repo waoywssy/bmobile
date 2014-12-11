@@ -29,6 +29,7 @@ Drupal.behaviors.add_company = {
         element.parent().append(error); // default function
       }, 
       submitHandler: postInfo,
+      errorLabelContainer:'#msg',
       rules:{ 
         name:{ 
           required: 1,
